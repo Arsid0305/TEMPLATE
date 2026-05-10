@@ -111,6 +111,57 @@
 
 ---
 
+## Безопасность — чеклист перед первым деплоем
+
+Claude инициирует проверку сам перед первым деплоем в `main`. Молча не пропускать.
+
+### Secrets & ключи
+- [ ] `service_role` ключ нигде в `VITE_` переменных — только в Edge Functions или GitHub Secrets
+- [ ] `.env` файлы в `.gitignore`, не попали в историю git (`git log --all -- .env`)
+- [ ] В `vite.config.ts` нет `build.sourcemap: true` (исходники не отдаются в браузер)
+
+### Supabase RLS
+- [ ] RLS включён на **каждой** таблице в `public` схеме
+- [ ] Политики используют `auth.uid() = user_id`, не открыты анонимам
+- [ ] Проверка: `SELECT tablename FROM pg_tables WHERE schemaname='public'` + `SELECT * FROM pg_policies`
+
+### Edge Functions
+- [ ] Каждая функция верифицирует JWT: `supabase.auth.getUser(token)` → 401 если невалидный
+- [ ] Никаких user_id из тела запроса — только из верифицированного токена
+- [ ] Входные данные валидируются через `zod` до любого обращения к БД
+- [ ] CORS ограничен: `Access-Control-Allow-Origin: https://DOMAIN.com` (не `*`)
+
+### Vercel / Frontend
+- [ ] CSP заголовок в `vercel.json`:
+  ```json
+  { "headers": [{ "source": "/(.*)", "headers": [
+    { "key": "Content-Security-Policy",
+      "value": "default-src 'self'; connect-src 'self' https://*.supabase.co; script-src 'self'" }
+  ]}]}
+  ```
+- [ ] `X-Frame-Options: DENY` и `X-Content-Type-Options: nosniff` в тех же заголовках
+- [ ] Нет `dangerouslySetInnerHTML` без санитизации
+
+### Rate limiting
+- [ ] Supabase Auth rate limiting не отключён (настройки Auth → Rate Limits)
+- [ ] На чувствительных Edge Functions (OTP, платёжные) — собственная защита от перебора
+
+### CI/CD
+- [ ] В каждом workflow файле: `permissions: contents: read` (минимальные права)
+- [ ] Actions закреплены по commit SHA, не по тегу (`actions/checkout@abc1234`)
+- [ ] `npm audit --audit-level=high` добавлен как шаг перед билдом в `promote.yml`
+- [ ] Секреты не выводятся в `run:` шагах через `echo`
+
+### OWASP Top 10 — быстрая проверка
+- [ ] A01 Broken Access Control — RLS на всех таблицах, JWT в каждой Edge Function
+- [ ] A02 Cryptographic Failures — нет service_role во фронтенде, нет секретов в git
+- [ ] A03 Injection — zod валидация на всех входных данных Edge Functions
+- [ ] A05 Misconfiguration — CSP, CORS, заголовки настроены
+- [ ] A06 Vulnerable Components — `npm audit` в CI
+- [ ] A07 Auth Failures — rate limiting на OTP, токен верифицируется на бэкенде
+
+---
+
 ## Инфраструктура
 
 - Фронтенд: Vercel — автодеплой при пуше в `main`
