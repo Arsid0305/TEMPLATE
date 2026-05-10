@@ -11,6 +11,15 @@
 
 ---
 
+## Стиль общения Claude
+- Выдавать только результат, без рассуждений вслух
+- Не заполнять контекстное окно внутренними рассуждениями
+- Коротко и по делу
+- Без лишних объяснений если не просят
+- Отвечать на языке пользователя
+
+---
+
 ## BIG vs SMALL — определить до начала
 
 Спросить пользователя: это большая или маленькая задача?
@@ -92,6 +101,20 @@
 
 ---
 
+## Выбор модели для subagents
+
+При запуске subagent всегда явно указывать `model`:
+
+| Модель | Когда использовать |
+|---------|-------------------|
+| `haiku` | Поиск файлов, чтение кода, grep, простые запросы — быстро и дёшево |
+| `sonnet` | Написание кода, отладка, стандартные задачи — баланс качества и цены |
+| `opus` | Архитектура, сложный анализ, планирование BIG-задач — максимальное качество |
+
+Правило: по умолчанию использовать `sonnet`. Переключаться на `haiku` если задача простая, на `opus` только если задача требует глубокого архитектурного решения.
+
+---
+
 ## Self-Improvement Loop
 
 После каждой правки от пользователя:
@@ -132,27 +155,33 @@ Claude инициирует проверку сам перед первым де
 - [ ] CORS ограничен: `Access-Control-Allow-Origin: https://DOMAIN.com` (не `*`)
 
 ### Vercel / Frontend
-- [ ] CSP заголовок в `vercel.json`
-- [ ] `X-Frame-Options: DENY` и `X-Content-Type-Options: nosniff`
+- [ ] CSP заголовок в `vercel.json`:
+  ```json
+  { "headers": [{ "source": "/(.*)", "headers": [
+    { "key": "Content-Security-Policy",
+      "value": "default-src 'self'; connect-src 'self' https://*.supabase.co; script-src 'self'" }
+  ]}]}
+  ```
+- [ ] `X-Frame-Options: DENY` и `X-Content-Type-Options: nosniff` в тех же заголовках
 - [ ] Нет `dangerouslySetInnerHTML` без санитизации
 
 ### Rate limiting
-- [ ] Supabase Auth rate limiting не отключён
-- [ ] На чувствительных Edge Functions — защита от перебора
+- [ ] Supabase Auth rate limiting не отключён (настройки Auth → Rate Limits)
+- [ ] На чувствительных Edge Functions (OTP, платёжные) — собственная защита от перебора
 
 ### CI/CD
-- [ ] В каждом workflow: `permissions: contents: read`
-- [ ] Actions закреплены по commit SHA
-- [ ] `npm audit --audit-level=high` перед билдом в `promote.yml`
-- [ ] Секреты не выводятся в `run:` через `echo`
+- [ ] В каждом workflow файле: `permissions: contents: read` (минимальные права)
+- [ ] Actions закреплены по commit SHA, не по тегу (`actions/checkout@abc1234`)
+- [ ] `npm audit --audit-level=high` добавлен как шаг перед билдом в `promote.yml`
+- [ ] Секреты не выводятся в `run:` шагах через `echo`
 
-### OWASP Top 10
+### OWASP Top 10 — быстрая проверка
 - [ ] A01 Broken Access Control — RLS на всех таблицах, JWT в каждой Edge Function
-- [ ] A02 Cryptographic Failures — нет service_role во фронтенде
-- [ ] A03 Injection — zod валидация
-- [ ] A05 Misconfiguration — CSP, CORS, заголовки
+- [ ] A02 Cryptographic Failures — нет service_role во фронтенде, нет секретов в git
+- [ ] A03 Injection — zod валидация на всех входных данных Edge Functions
+- [ ] A05 Misconfiguration — CSP, CORS, заголовки настроены
 - [ ] A06 Vulnerable Components — `npm audit` в CI
-- [ ] A07 Auth Failures — rate limiting, JWT на бэкенде
+- [ ] A07 Auth Failures — rate limiting на OTP, токен верифицируется на бэкенде
 
 ---
 
@@ -174,21 +203,42 @@ Claude инициирует проверку сам перед первым де
 
 ## Стандартные пакеты
 
+> Правило: при использовании нового пакета в любом проекте — добавлять его сюда.
+
 - `lucide-react` — иконки
 - `sonner` — toast-уведомления
-- `next-themes` — смена темы
+- `next-themes` — смена темы (светлая/тёмная)
 - `zod` — валидация данных
 - `date-fns` — форматирование дат
 - `xlsx` — парсинг Excel-файлов
-- `@resvg/resvg-js` — SVG → PNG (devDependency)
+- `@resvg/resvg-js` — SVG → PNG (devDependency, для иконок PWA)
 
 ---
 
 ## Design System
 
-Репо: `github.com/Arsid0305/design-system`
-Подключён как git submodule. Инициализировать: `git submodule update --init`
-Перед любым UI-изменением — открыть нужный файл из `[submodule]/[PROJECT]/preview/`. Не выдумывать UI.
+Репо: `github.com/Arsid0305/design-system` — отдельный репо, наполняется через дизайн-процесс.
+Внутри — папка для каждого проекта (`/kino-app/`, `/wb-bot/` и т.д.).
+Подключён как git submodule — локальное имя смотреть в `.gitmodules`.
+Инициализировать: `git submodule update --init`
+Обновить: `git submodule update --remote`
+
+Перед любым изменением UI — открыть нужный файл из `[submodule]/[PROJECT]/preview/`:
+
+| Что меняешь | Файл |
+|-------------|------|
+| Карточки | `component-cards.html` |
+| Кнопки | `component-buttons.html` |
+| Чипы, теги | `component-chips.html` |
+| Шапка, табы | `component-nav.html` |
+| Чат AI | `component-chat.html` |
+| Авторизация | `component-auth.html` |
+| Цвета | `colors-base.html` |
+| Шрифты | `type-display.html` |
+| Тени | `shadows-glow.html` |
+| Отступы | `spacing-tokens.html` |
+
+Не выдумывать UI с нуля — брать из design system.
 
 ---
 
@@ -220,16 +270,6 @@ Claude инициирует проверку сам перед первым де
 - Разрабатывать на ветке `claude/...`, никогда не пушить напрямую в `main`
 - Никогда не использовать `--no-verify`, `--force`, `--no-gpg-sign`
 - Синхронизация с основной: `git pull origin main`
-
----
-
-## Стиль общения Claude
-
-- Выдавать только результат, без рассуждений вслух
-- Не заполнять контекстное окно внутренними рассуждениями
-- Коротко и по делу
-- Без лишних объяснений если не просят
-- Отвечать на языке пользователя
 
 ---
 
