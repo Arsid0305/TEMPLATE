@@ -264,6 +264,7 @@ Claude инициирует проверку сам перед первым де
     deploy.yml        — если есть бэкенд
 .gitignore
 .env.example          — если есть переменные окружения
+.cursorrules          — если проект используется в Cursor IDE
 CLAUDE.md
 README.md
 tasks/
