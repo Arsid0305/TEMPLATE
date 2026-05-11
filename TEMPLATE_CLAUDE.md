@@ -226,7 +226,7 @@ Claude инициирует проверку сам перед первым де
 - [ ] CORS ограничен: `Access-Control-Allow-Origin: https://DOMAIN.com` (не `*`)
 
 ### CI/CD
-- [ ] В каждом workflow файле: `permissions: contents: read` (минимальные права)
+- [ ] В каждом workflow файле: `permissions: contents: write` (для push)
 - [ ] Actions закреплены по commit SHA, не по тегу
 - [ ] `npm audit --audit-level=high` добавлен как шаг перед билдом
 - [ ] Секреты не выводятся в `run:` шагах через `echo`
@@ -248,8 +248,8 @@ Claude инициирует проверку сам перед первым де
 - БД и Auth: [Supabase / нет]
 - Репо: github.com/Arsid0305/[REPO_NAME]
 - Workflows:
-  - automerge.yml — ветка claude/... → dev [✅ / ❌]
-  - promote.yml   — dev → main после билда [✅ / ❌]
+  - automerge.yml — ветка claude/... → dev, конфликты разрешаются `-X theirs` [✅ / ❌]
+  - promote.yml   — dev → main после билда + sync main → dev [✅ / ❌]
   - deploy.yml    — деплой Edge Functions [✅ / ❌]
 
 ---
@@ -354,10 +354,10 @@ package.json          — если Node.js
 
 1. Claude пишет код → пушит в ветку `claude/...`
 2. После каждого пуша — создать PR в `dev` (если не существует)
-3. `automerge.yml` мержит ветку в `dev` автоматически
+3. `automerge.yml` мержит ветку в `dev` автоматически (`-X theirs` — конфликты разрешаются в пользу входящей ветки)
 4. После успешного билда — спросить пользователя: **«Мержить в main?»** и ждать ответа
 5. Никогда не мержить в `main` без явного подтверждения пользователя
-6. После мержа в `main` — деплой происходит автоматически (Vercel / GitHub Actions)
+6. После мержа в `main` — `promote.yml` автоматически синхронизирует `main` обратно в `dev`
 
 ---
 
