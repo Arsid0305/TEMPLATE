@@ -50,6 +50,7 @@ One subagent = one focused task.
 ## Git Workflow
 
 - Branch always starts with `claude/...`
-- After push: create PR targeting `dev`
-- Never merge into `main` without asking user: **"Merge into main?"**
-- `automerge.yml` handles `claude/...` → `dev` automatically
+- After push: create PR targeting `dev` (never `main`)
+- `automerge.yml` merges `claude/...` → `dev` automatically
+- `promote.yml` merges `dev` → `main` automatically after build
+- Never create a PR directly to `main`

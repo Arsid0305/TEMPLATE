@@ -84,7 +84,7 @@ Format:
 
 - Develop on feature branches, never push directly to `main`
 - Never use `--no-verify`, `--force`, `--no-gpg-sign`
-- Create a PR for merging; ask user before merging into `main`
+- PR always targets `dev` — `main` is managed automatically by CI
 
 ---
 
