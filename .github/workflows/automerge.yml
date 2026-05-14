@@ -6,14 +6,13 @@ on:
       - main
       - dev
 
-permissions:
-  contents: write
-
 jobs:
   automerge-to-dev:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4
         with:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
