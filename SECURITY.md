@@ -18,10 +18,11 @@
 - [ ] CORS restricted: `Access-Control-Allow-Origin: https://DOMAIN.com` (not `*`)
 
 ## CI/CD
-- [ ] Workflows have `permissions: contents: write`
+- [ ] Workflows use minimal permissions — `contents: write` only where needed, `contents: read` elsewhere
 - [ ] Actions pinned to commit SHA, not tag
-- [ ] `npm audit --audit-level=high` before build step
+- [ ] `npm audit --audit-level=high` runs before build step
 - [ ] Secrets not echoed in `run:` steps
+- [ ] Branch name / user input never interpolated directly into `run:` shell commands — use `env:` block instead
 
 ## OWASP Quick Check
 - [ ] A01 Broken Access Control — RLS on all tables, JWT in every Edge Function

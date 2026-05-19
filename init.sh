@@ -5,32 +5,66 @@
 # Remote usage: bash <(curl -s https://raw.githubusercontent.com/Arsid0305/TEMPLATE/main/init.sh) . [adapter]
 # Adapters: claude (default) | openai | cursor
 
+set -euo pipefail
+
 TARGET=${1:-.}
 ADAPTER=${2:-claude}
+
+# Validate TARGET — reject obviously dangerous paths
+case "$TARGET" in
+  / | /etc | /usr | /bin | /sbin | /lib | /boot | /sys | /proc)
+    echo "ERROR: Refusing to initialize into system path: $TARGET" >&2
+    exit 1
+    ;;
+esac
+
 TEMPLATE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" 2>/dev/null && pwd)"
 
 # If running remotely (via curl), clone TEMPLATE first
 if [ ! -f "$TEMPLATE_DIR/SYSTEM.md" ]; then
   echo "Cloning TEMPLATE..."
-  rm -rf /tmp/arsid-template
-  git clone https://github.com/Arsid0305/TEMPLATE /tmp/arsid-template --quiet
-  TEMPLATE_DIR=/tmp/arsid-template
+  TMP_DIR="$(mktemp -d)"
+  trap 'rm -rf "$TMP_DIR"' EXIT
+  git clone https://github.com/Arsid0305/TEMPLATE "$TMP_DIR" --depth 1 --quiet
+  TEMPLATE_DIR="$TMP_DIR"
 fi
 
 mkdir -p "$TARGET/.github/workflows" "$TARGET/tasks"
 
-cp "$TEMPLATE_DIR"/workflows/*.yml "$TARGET/.github/workflows/" 2>/dev/null && echo "Copied workflows"
+if cp "$TEMPLATE_DIR"/workflows/*.yml "$TARGET/.github/workflows/" 2>/dev/null; then
+  echo "Copied workflows"
+else
+  echo "WARNING: No workflow files found to copy" >&2
+fi
 
 touch "$TARGET/tasks/todo.md" "$TARGET/tasks/lessons.md"
 
 cp "$TEMPLATE_DIR/NEW_PROJECT.md" "$TARGET/NEW_PROJECT.md"
 
-ADAPTER_SRC="$TEMPLATE_DIR/adapters/$(echo "$ADAPTER" | tr '[:lower:]' '[:upper:]').md"
+# Create .gitignore if not present
+if [ ! -f "$TARGET/.gitignore" ]; then
+  cat > "$TARGET/.gitignore" << 'GITIGNORE'
+.env
+.env.local
+.env.*.local
+node_modules/
+dist/
+build/
+.DS_Store
+*.log
+npm-debug.log*
+.supabase/
+GITIGNORE
+  echo "Created .gitignore"
+fi
+
+ADAPTER_UPPER="$(echo "$ADAPTER" | tr '[:lower:]' '[:upper:]')"
+ADAPTER_SRC="$TEMPLATE_DIR/adapters/${ADAPTER_UPPER}.md"
 if [ -f "$ADAPTER_SRC" ]; then
   cp "$ADAPTER_SRC" "$TARGET/CLAUDE.md"
   echo "Copied adapter: $ADAPTER"
 else
-  echo "Adapter not found: $ADAPTER (skipped)"
+  echo "WARNING: Adapter not found: $ADAPTER (skipped)" >&2
 fi
 
 echo ""
