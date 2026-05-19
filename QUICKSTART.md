@@ -13,11 +13,15 @@
 
 ## Команда для Cursor
 
+> Перед выполнением можно просмотреть скрипт: `curl -s https://raw.githubusercontent.com/Arsid0305/TEMPLATE/main/init.sh | less`
+
 ```bash
 bash <(curl -s https://raw.githubusercontent.com/Arsid0305/TEMPLATE/main/init.sh) . cursor
 ```
 
 ## Команда для ChatGPT
+
+> Перед выполнением можно просмотреть скрипт: `curl -s https://raw.githubusercontent.com/Arsid0305/TEMPLATE/main/init.sh | less`
 
 ```bash
 bash <(curl -s https://raw.githubusercontent.com/Arsid0305/TEMPLATE/main/init.sh) . openai

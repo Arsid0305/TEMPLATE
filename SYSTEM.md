@@ -95,6 +95,7 @@ Format:
 - Don't create abstractions for hypothetical future needs
 - Simple code beats clever code
 - No command injection, path traversal, hardcoded secrets
+- BIG tasks that add or change logic must include relevant unit tests in `tests/`
 
 ---
 
