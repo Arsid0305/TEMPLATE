@@ -29,7 +29,7 @@ if [ ! -f "$TEMPLATE_DIR/SYSTEM.md" ]; then
   TEMPLATE_DIR="$TMP_DIR"
 fi
 
-mkdir -p "$TARGET/.github/workflows" "$TARGET/tasks"
+mkdir -p "$TARGET/.github/workflows" "$TARGET/tasks" "$TARGET/docs" "$TARGET/scripts"
 
 if cp "$TEMPLATE_DIR"/workflows/*.yml "$TARGET/.github/workflows/" 2>/dev/null; then
   echo "Copied workflows"
@@ -40,6 +40,16 @@ fi
 touch "$TARGET/tasks/todo.md" "$TARGET/tasks/lessons.md"
 
 cp "$TEMPLATE_DIR/NEW_PROJECT.md" "$TARGET/NEW_PROJECT.md"
+
+if [ -f "$TEMPLATE_DIR/docs/AUDIT_PROMPT.md" ]; then
+  cp "$TEMPLATE_DIR/docs/AUDIT_PROMPT.md" "$TARGET/docs/AUDIT_PROMPT.md"
+  echo "Copied docs/AUDIT_PROMPT.md"
+fi
+
+if [ -f "$TEMPLATE_DIR/scripts/check_consistency.py" ]; then
+  cp "$TEMPLATE_DIR/scripts/check_consistency.py" "$TARGET/scripts/check_consistency.py"
+  echo "Copied scripts/check_consistency.py"
+fi
 
 # Create .gitignore if not present
 if [ ! -f "$TARGET/.gitignore" ]; then
