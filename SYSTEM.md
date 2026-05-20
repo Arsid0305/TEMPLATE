@@ -82,9 +82,10 @@ Format:
 
 ## 5. Git Rules
 
+- At the start of every session: `git pull origin main`
 - Develop on feature branches, never push directly to `main`
 - Never use `--no-verify`, `--force`, `--no-gpg-sign`
-- PR always targets `dev` — `main` is managed automatically by CI
+- Branches merge directly to `main` via CI — no `dev` stage
 
 ---
 

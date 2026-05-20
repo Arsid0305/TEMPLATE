@@ -24,9 +24,8 @@ LIMITATIONS:
 
 ## Git Workflow
 
-- Branch naming: `cursor/...`
+- Branch: `cursor/<description>` — auto-merges to main via CI after tests pass
 - Use terminal or IDE git panel for staging and commits
-- Never push directly to `main`
 
 ---
 

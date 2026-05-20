@@ -49,8 +49,5 @@ One subagent = one focused task.
 
 ## Git Workflow
 
-- Branch always starts with `claude/...`
-- After push: `automerge.yml` merges the branch directly into `main` automatically
-- No dev stage in this repo — main is the only protected branch
-- PRs are optional (for review), automerge triggers on push regardless
-- Never push directly to `main`
+- Branch: `claude/<description>` — auto-merges to main via CI after tests pass
+- PRs are optional, automerge triggers on push regardless
