@@ -2,8 +2,9 @@ name: Auto-merge feature branches
 
 on:
   push:
-    branches-ignore:
-      - main
+    branches:
+      - "claude/**"
+      - "cursor/**"
 
 concurrency:
   group: automerge-to-main
@@ -21,6 +22,14 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Check consistency
+        run: python scripts/check_consistency.py
+
       - name: Merge into main
         env:
           BRANCH_NAME: ${{ github.ref_name }}
@@ -28,5 +37,10 @@ jobs:
           git config user.email "actions@github.com"
           git config user.name "GitHub Actions"
           git checkout main
-          git merge --no-ff "$BRANCH_NAME" -m "Auto-merge $BRANCH_NAME into main"
+          git fetch origin "$BRANCH_NAME"
+          if ! git merge --no-ff "$BRANCH_NAME" -m "Auto-merge $BRANCH_NAME into main"; then
+            echo "ERROR: Merge conflict detected. Aborting." >&2
+            git merge --abort
+            exit 1
+          fi
           git push origin main
