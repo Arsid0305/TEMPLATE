@@ -118,10 +118,13 @@ find . -name '*.md' -not -path './.git/*' -not -path '*/archive/*'
 | Что сверять | Источник (SSOT) | Вторичные |
 |---|---|---|
 | Git workflow | `automerge.yml` | `SYSTEM.md §5`, `QUICKSTART.md`, `adapters/*.md` |
+| Git Rules §5 | `SYSTEM.md §5` | `CLAUDE.md` (Git Workflow), `automerge.yml` |
 | Список адаптеров | `adapters/` папка | `init.sh`, `QUICKSTART.md` таблица |
 | Список файлов копируемых | `init.sh` | `QUICKSTART.md` «Структура после init.sh» |
 
 - [ ] Git workflow одинаков во всех источниках
+- [ ] `CLAUDE.md` Git Workflow не противоречит `SYSTEM.md §5`: нет `dev`, есть `git pull origin main`, нет `--force`
+- [ ] `automerge.yml` branch names совпадают с тем что описано в `CLAUDE.md`
 - [ ] Список адаптеров в `init.sh` совпадает с `adapters/` и `QUICKSTART.md`
 - [ ] Структура после `init.sh` в `QUICKSTART.md` совпадает с тем что реально копируется
 
