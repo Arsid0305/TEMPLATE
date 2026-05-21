@@ -1,106 +1,109 @@
-# SYSTEM.md — Universal AI Operating Rules
+# SYSTEM.md — AI_OS Universal Core
 
-> Read this file and `tasks/lessons.md` at the start of every chat.
-> Then load your AI-specific adapter from `adapters/`.
-
----
-
-## ⛔ Core Rule
-
-No changes without explicit user agreement.
-Change only what was discussed and confirmed. No initiative edits, "while I'm at it" changes, refactoring, or reverting others' decisions.
-Spotted a bug outside scope — report it and wait. Do not touch.
-
-**Exception:** a bug inside the already-agreed scope — fix it, report after.
+> Читай этот файл в начале каждого нового чата.
+> Также читай: `MEMORY/lessons/lessons.md`
 
 ---
 
-## 1. Communication
+## 1. Что такое AI_OS
 
-- Answer with results only — no preambles ("let me check", "great question").
-- No thinking out loud, no internal reasoning in context.
-- One sentence instead of a paragraph.
-- Chat language: user's language. Code and comments: English.
+Персональная операционная система для работы с AI-инструментами.
 
----
+- Не enterprise-платформа
+- Не набор промптов
+- Личный runtime для ежедневной работы
 
-## 2. Task Classification
-
-Before starting, classify:
-
-**SMALL** — do immediately:
-- 1–3 file edits, obvious bug fix, docs, rename, style
-
-**BIG** — plan first:
-- New module, architecture change, public interface change, file deletion, cross-layer impact
-
-**BIG protocol:**
-1. Write a checklist plan in `tasks/todo.md`
-2. Present the plan, wait for feedback
-3. Do not write code until user confirms
-
-**SMALL protocol:**
-1. Brief plan (2–3 lines)
-2. Wait for confirmation
+Репозиторий — живая рабочая копия. Любой AI читает этот файл и начинает работу.
 
 ---
 
-## 3. Review (BIG tasks only)
+## 2. Структура репозитория
 
-Before implementation, analyze and present options. Cover:
-- **Architecture:** component boundaries, failure points, security
-- **Code quality:** DRY violations, error handling, edge cases
-- **Performance:** N+1 queries, caching opportunities
-
-For each issue: description → why it matters → 2–3 options → recommendation.
-
----
-
-## 4. Task Management
-
-- `tasks/todo.md` — checklist for active BIG task. Check off as you go.
-- `tasks/lessons.md` — patterns from mistakes. Update at end of each chat.
-
-**What belongs in `tasks/lessons.md`:**
-- Repeating mistakes and their root cause
-- Systemic patterns across multiple sessions
-- Architectural conclusions
-
-**What does NOT belong:**
-- One-off bugs
-- Stylistic preferences
-- Temporary context
-
-Format:
 ```
-## [date] Short title
-**What happened:** ...
-**Rule:** ...
+AI_OS/
+├── SYSTEM.md              ← ты здесь (читать первым)
+├── CLAUDE.md              ← адаптер для Claude Code
+├── .cursor/rules/ai-os.mdc← адаптер для Cursor
+├── MEMORY/
+│   ├── lessons/lessons.md ← накопленные уроки (читать)
+│   └── tasks/             ← активные задачи
+├── runtime/               ← Python CLI
+│   ├── main.py
+│   ├── core/              ← движки, оркестратор, конфиг
+│   └── prompts/           ← промпты по режимам
+├── skills_sistem/agents/  ← когнитивные скилы (SKILL-*.md)
+├── ADAPTERS/              ← адаптеры для ChatGPT, Gemini, Claude.ai, Codex
+├── docs/                  ← документация
+│   ├── ARCHITECTURE.md    ← архитектура системы
+│   ├── AUDIT_PROMPT.md    ← reference-промпт для аудитов репо
+│   ├── AI_TESTING.md      ← инструкция по тестированию AI
+│   ├── ai_benchmark.md    ← результаты тестов (прогоны)
+│   ├── памятка.md         ← памятка по работе с AI_OS
+│   └── archive/           ← архив завершённых сессионных эпикризов
+└── projects/              ← результаты работы AI
 ```
 
 ---
 
-## 5. Git Rules
+## 3. Классификация задач
 
-- At the start of every session: `git pull origin main`
-- Develop on feature branches, never push directly to `main`
-- Never use `--no-verify`, `--force`, `--no-gpg-sign`
-- Branches merge directly to `main` via CI — no `dev` stage
+### SMALL — делать сразу
+- Правка 1–3 файлов
+- Баг-фикс с очевидной причиной
+- Документация, переименование
+- Рефакторинг без изменения контракта
 
----
-
-## 6. Code Principles
-
-- Don't add features beyond the request
-- Don't refactor "while you're at it"
-- Don't create abstractions for hypothetical future needs
-- Simple code beats clever code
-- No command injection, path traversal, hardcoded secrets
-- BIG tasks that add or change logic must include relevant unit tests in `tests/`
+### BIG — спросить перед реализацией
+- Новый модуль или архитектурное изменение
+- Изменение публичного интерфейса
+- Удаление файлов/функций
+- Задача занимает больше 10 минут или затрагивает несколько слоёв
 
 ---
 
-## 7. Adapter
+## 4. Стиль общения
 
-Load your AI-specific adapter from `adapters/` after this file.
-The adapter declares your capabilities and limitations.
+- Русский язык в чате, английский в коде
+- Отвечать конкретно, без воды
+- Задавать уточняющие вопросы перед BIG-задачами
+- Не придумывать scope сверх запроса
+- Комментарии в коде — только когда WHY неочевиден
+
+---
+
+## 5. Task Management
+
+**Lessons** — накапливаются, не удаляются (`MEMORY/lessons/lessons.md`):
+```
+## [дата] Название
+**Что произошло:** ...
+**Правило:** ...
+```
+
+**Tasks** — активные задачи по проектам (`MEMORY/tasks/`).
+
+---
+
+## 6. Принципы работы с кодом
+
+- Не добавлять фичи без запроса
+- Не рефакторить «заодно»
+- Не создавать абстракции под гипотетическое будущее
+- Простой код лучше «правильного»
+- Безопасность: никакого command injection, path traversal, hardcoded secrets
+
+---
+
+## 7. Runtime (Python CLI)
+
+```bash
+cd runtime
+python main.py --diagnose                          # проверка состояния системы
+python main.py --mode code --model openai --goal "..."
+```
+
+<!-- AUTO:MODES_INLINE_START -->
+**Режимы (13):** `research` `code` `review` `decision` `legal` `medical` `marketplace_wb` `marketplace_ozon` `tables` `writing` `visual` `meta_agent` `meta_prompt`
+<!-- AUTO:MODES_INLINE_END -->
+
+**Модели:** `openai` · `anthropic` / `claude` · `gemini` · `deepseek`
