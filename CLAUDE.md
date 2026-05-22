@@ -62,7 +62,37 @@ bash /tmp/arsid-template/init.sh /path/to/new-project claude
 
 ---
 
-## Две системы skills
+## Инструменты Claude Code
+
+### Slash-команды `/` — локальные (`.claude/commands/`)
+
+| Команда | Что делает |
+|---|---|
+| `/audit-repo` | Полный аудит репо — запускает `@repo-auditor` по `docs/AUDIT_PROMPT.md`, 5 проходов, 19 секций |
+| `/review` | Code review текущих изменений через `@code-reviewer` перед мержем |
+| `/run` | Запуск AI_OS через Intent Router — без `--mode`, система сама выбирает режим |
+| `/ship` | Pre-launch gate — параллельно: `@code-reviewer` + `@security-auditor` + `@test-engineer`, вердикт go/no-go |
+
+### Агенты `@` — субагенты (`.claude/agents/`)
+
+| Агент | Что делает |
+|---|---|
+| `@critic` | Жёсткий приёмщик-диагност. Один проход, 21 аспект, только фиксирует подозрительное — не правит, не рекомендует. Решение принимает пользователь |
+| `@code-reviewer` | Senior code review по 5 осям: корректность, читаемость, архитектура, безопасность, производительность |
+| `@repo-auditor` | Полный аудит репо по `docs/AUDIT_PROMPT.md` |
+| `@security-auditor` | Security review: уязвимости, threat modeling, hardening |
+| `@test-engineer` | Тест-стратегия, написание тестов, анализ покрытия |
+
+### Skills `/` — системные (`.claude/skills/`)
+
+| Skill | Что делает |
+|---|---|
+| `/code-review-and-quality` | Multi-axis code review перед мержем |
+| `/spec-driven-development` | Спецификация перед реализацией — для новых фич и BIG-задач |
+| `/test-driven-development` | TDD: тест → реализация → рефакторинг |
+| `/shipping-and-launch` | Pre-launch checklist, rollback стратегия |
+
+### Две системы skills
 
 - `.claude/` — только в сессиях Claude Code CLI (агенты, скиллы, slash-команды)
 - `skills_sistem/` — только через Python runtime (`python main.py`)
