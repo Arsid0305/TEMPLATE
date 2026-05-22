@@ -76,25 +76,13 @@ bash /tmp/arsid-template/init.sh /path/to/new-project claude
 
 **Правило вызова:** при словах «аудит», «ревью», «проверь», «готово?» — параллельно прогонять `@reviewer` и `@repo-auditor`. Точечный вызов одного — только по явному запросу.
 
-### Slash-команды
+### Slash-команды и Skills
 
-Удалены — все были обёртками над агентами. Вызывать агентов напрямую через `@`.
+Локальные удалены — были дублями или обёртками. Используются глобальные навыки Claude Code (`code-review`, `verify`, `run`, `init` и др.) и встроенные slash-команды CLI.
 
-### Skills `/` — системные (`.claude/skills/`)
+### `skills_sistem/` — Python runtime
 
-| Skill | Что делает |
-|---|---|
-| `/code-review-and-quality` | Multi-axis code review перед мержем |
-| `/spec-driven-development` | Спецификация перед реализацией — для новых фич и BIG-задач |
-| `/test-driven-development` | TDD: тест → реализация → рефакторинг |
-| `/shipping-and-launch` | Pre-launch checklist, rollback стратегия |
-
-### Две системы skills
-
-- `.claude/` — только в сессиях Claude Code CLI (агенты, скиллы, slash-команды)
-- `skills_sistem/` — только через Python runtime (`python main.py`)
-
-В сессии Claude Code не обращаться к `skills_sistem/` напрямую.
+`skills_sistem/` относится к Python-runtime AI_OS (`python main.py`), не к Claude Code. В сессии Claude Code не обращаться напрямую.
 
 ---
 
