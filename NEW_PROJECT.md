@@ -38,19 +38,15 @@ Reference workflows (copy from `workflows/` — optional, remove unused):
 
 ## 4. Design System
 
-Repo: github.com/Arsid0305/design-system — connected as git submodule.
+Repo: github.com/[OWNER]/[DESIGN-SYSTEM-REPO] — [git submodule / npm package / none]
 
-Before any UI change — open the relevant preview file from `[submodule]/[PROJECT]/preview/`:
+Before any UI change — open the relevant preview file:
 
 | What | File |
 |------|------|
-| Cards | `component-cards.html` |
-| Buttons | `component-buttons.html` |
-| Navigation | `component-nav.html` |
-| Chat AI | `component-chat.html` |
-| Auth | `component-auth.html` |
-| Colors | `colors-base.html` |
-| Typography | `type-display.html` |
+| Cards | `[preview path]` |
+| Buttons | `[preview path]` |
+| Navigation | `[preview path]` |
 
 Do not invent UI — use design system components.
 
