@@ -7,8 +7,31 @@ on:
       - 'cursor/**'
 
 jobs:
+  validate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout trusted script from main
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: main
+          path: _main
+          sparse-checkout: scripts/check_consistency.py
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Checkout feature branch
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          path: _feature
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run consistency check
+        run: python _main/scripts/check_consistency.py --root _feature
+
   automerge-to-main:
     runs-on: ubuntu-latest
+    needs: validate
     permissions:
       contents: write
     steps:
