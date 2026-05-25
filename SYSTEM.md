@@ -30,8 +30,8 @@ TEMPLATE/
 ├── ADAPTERS/              ← веб-адаптеры (ChatGPT, Gemini, Codex, Claude Web)
 │   └── [синхронизируется из AI_OS автоматически]
 ├── workflows/             ← шаблоны CI/CD для новых проектов
-│   ├── automerge.yml      ← feature branch → dev auto-merge
-│   ├── promote.yml        ← dev → main после сборки
+│   ├── automerge.yml      ← feature branch auto-merge template
+│   ├── promote.yml        ← promotion to main после сборки
 │   └── deploy.yml         ← Supabase Edge Functions deploy
 ├── .github/workflows/
 │   └── automerge.yml      ← CI для самого TEMPLATE-репо
