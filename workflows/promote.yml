@@ -1,9 +1,7 @@
 name: Promote dev to main
 
 on:
-  push:
-    branches:
-      - dev
+  workflow_dispatch:
 
 concurrency:
   group: promote-to-main

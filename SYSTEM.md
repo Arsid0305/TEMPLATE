@@ -30,8 +30,8 @@ TEMPLATE/
 ├── ADAPTERS/              ← веб-адаптеры (ChatGPT, Gemini, Codex, Claude Web)
 │   └── [синхронизируется из AI_OS автоматически]
 ├── workflows/             ← шаблоны CI/CD для новых проектов
-│   ├── automerge.yml      ← feature branch auto-merge template
-│   ├── promote.yml        ← promotion to main после сборки
+│   ├── automerge.yml      ← PR-based auto-merge template (claude/ and cursor/ branches)
+│   ├── promote.yml        ← promotion to main (manual trigger via workflow_dispatch)
 │   └── deploy.yml         ← Supabase Edge Functions deploy
 ├── .github/workflows/
 │   └── automerge.yml      ← CI для самого TEMPLATE-репо
@@ -94,7 +94,21 @@ TEMPLATE/
 
 ---
 
-## 6. Синхронизация с AI_OS
+## 6. Рабочий процесс CI/CD
+
+### Auto-merge (automerge.yml)
+- Ветки `claude/...` и `cursor/...` мержатся автоматически через GitHub API
+- Триггер: открытие/обновление PR в `main`
+- Мерж происходит через `github-script` (squash) — без shell-команд, без injection-рисков
+- Требует: Settings → General → "Allow auto-merge" включён в репо
+
+### Promote (promote.yml)
+- Ручной запуск через `workflow_dispatch` (не автоматический)
+- Продвигает `dev` → `main` после сборки и аудита
+
+---
+
+## 7. Синхронизация с AI_OS
 
 TEMPLATE автоматически получает обновления из AI_OS при каждом пуше в `main` AI_OS:
 

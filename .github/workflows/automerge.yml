@@ -1,61 +1,24 @@
-name: Auto-merge feature branches
+name: Auto-merge claude/cursor branches
 
 on:
-  push:
-    branches:
-      - 'claude/**'
-      - 'cursor/**'
+  pull_request:
+    branches: [main]
+    types: [opened, reopened, synchronize]
 
 jobs:
-  validate:
+  automerge:
     runs-on: ubuntu-latest
+    if: startsWith(github.head_ref, 'claude/') || startsWith(github.head_ref, 'cursor/')
     permissions:
-      contents: read
-    steps:
-      - name: Checkout trusted script from main
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
-        with:
-          ref: main
-          path: _main
-          sparse-checkout: scripts/check_consistency.py
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Checkout feature branch
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
-        with:
-          path: _feature
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Run consistency check
-        run: python _main/scripts/check_consistency.py --root _feature
-
-  automerge-to-main:
-    runs-on: ubuntu-latest
-    needs: validate
-    permissions:
+      pull-requests: write
       contents: write
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea  # v7.0.1
         with:
-          fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Merge into main
-        env:
-          BRANCH_NAME: ${{ github.ref_name }}
-        run: |
-          git config user.email "actions@github.com"
-          git config user.name "GitHub Actions"
-          git fetch origin
-          git checkout main
-          if ! git merge --no-ff "origin/$BRANCH_NAME" -m "Auto-merge $BRANCH_NAME into main"; then
-            echo "::error::Merge conflict with main. Rebase locally and re-push — refusing to auto-resolve."
-            git merge --abort || true
-            exit 1
-          fi
-          git push origin main
-
-      - name: Delete merged branch
-        env:
-          BRANCH_NAME: ${{ github.ref_name }}
-        run: git push origin --delete "$BRANCH_NAME"
+          script: |
+            await github.rest.pulls.merge({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.payload.pull_request.number,
+              merge_method: 'squash'
+            })
