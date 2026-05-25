@@ -86,12 +86,49 @@ bash /tmp/arsid-template/init.sh /path/to/new-project claude
 
 ---
 
+## context-mode — защита контекстного окна
+
+> context-mode MCP установлен. Хуки активны: PreToolUse, PostToolUse, PreCompact, SessionStart.
+> Запускается автоматически при старте каждой web-сессии.
+
+### Routing rules (MANDATORY)
+
+**Think in Code:** анализ/поиск/фильтрация данных → писать скрипт через `ctx_execute(language, code)`, только stdout попадает в контекст. Не читать сырые данные.
+
+**Заблокировано:** `curl`, `wget`, inline HTTP (`fetch(`, `requests.get(`), `WebFetch` — использовать `ctx_fetch_and_index(url, source)` или `ctx_execute`.
+
+**Перенаправить в sandbox:**
+- `Bash` (>20 строк вывода) → `ctx_batch_execute` или `ctx_execute(language: "shell", ...)`
+- `Read` для анализа/исследования → `ctx_execute_file(path, language, code)`
+- `Grep` → `ctx_execute(language: "shell", code: "grep ...")`
+
+**Иерархия выбора инструментов:**
+1. `ctx_search(sort: "timeline")` — после resume, проверить историю до вопроса пользователю
+2. `ctx_batch_execute(commands, queries)` — сбор данных, один вызов вместо 30+
+3. `ctx_search(queries: [...])` — все вопросы массивом, один вызов
+4. `ctx_execute` / `ctx_execute_file` — обработка в sandbox
+5. `ctx_fetch_and_index` → `ctx_search` — веб без HTML в контексте
+
+**После компрессии:** НЕ спрашивать «что мы делали?» — сначала `ctx_search(queries: ["summary"], source: "compaction", sort: "timeline")`.
+
+### Команды
+
+| Команда | Действие |
+|---|---|
+| `ctx stats` | Вызвать `ctx_stats`, показать вывод |
+| `ctx doctor` | Вызвать `ctx_doctor`, запустить команду, показать чеклист |
+| `ctx upgrade` | Вызвать `ctx_upgrade`, запустить команду |
+| `ctx purge` | Вызвать `ctx_purge` с `confirm: true` — очищает базу знаний |
+
+---
+
 ## Среда Claude
 
 | Инструмент | Статус |
-|---------------|---------|
+|---------------|----------|
 | Python 3      | ✅ |
-| Node.js       | ❌ |
+| Node.js       | ✅ |
+| context-mode  | ✅ |
 | Supabase CLI  | ❌ |
 | Deno          | ❌ |
 | .env реальный | ❌ |
@@ -102,7 +139,7 @@ bash /tmp/arsid-template/init.sh /path/to/new-project claude
 
 1. Claude пишет код → пушит в ветку `claude/...`
 2. `automerge.yml` прогоняет `pytest` и мержит ветку напрямую в `main` (PR не нужен)
-3. При конфликте с `main` workflow падает — нужно ребейзить локально и пушить заново
+3. При конфликте с `main` workflow падает — нужно ребейзить локально и пушать заново
 4. Никогда не мержить в `main` вручную без явного подтверждения пользователя
 
 ---
@@ -116,6 +153,15 @@ bash /tmp/arsid-template/init.sh /path/to/new-project claude
   git pull origin main
   ```
   Main уходит вперёд пока ветка живёт. Без pull — работаешь на устаревшем коде.
+
+---
+
+## Правила редактирования файлов
+
+- Всегда: `Read` → `Edit` → `git commit` → `git push`
+- `Edit` меняет только нужные строки — файл не трогается целиком
+- **Запрещено** использовать `push_files` (GitHub API) для кода — требует весь файл целиком, риск обрезки и опечаток
+- Если `git commit` не работает (ошибка подписи) — сообщить пользователю и остановиться, не обходить через `push_files`
 
 ---
 
