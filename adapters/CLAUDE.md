@@ -4,6 +4,16 @@
 
 ---
 
+## LLM_Wiki — Shared ecosystem context
+
+At the start of every session, read from `arsid0305/llm_wiki` (branch `main`):
+- `wiki/lessons.md` — cross-project lessons
+- `wiki/decisions.md` — key architectural decisions
+
+This gives context across all projects without user explanation.
+
+---
+
 ## Capabilities
 
 ```
@@ -22,30 +32,13 @@ LIMITATIONS:
 - no background persistent processes
 ```
 
----
-
 ## Subagents
-
-Use subagents to isolate context (file search, log reading, parallel tasks).
-One subagent = one focused task.
 
 | Model | When |
 |-------|------|
 | `haiku` | File search, grep, simple reads — fast and cheap |
 | `sonnet` | Code writing, debugging — default |
 | `opus` | Architecture, complex BIG-task analysis |
-
----
-
-## Context Mode (if installed)
-
-| Instead of | Use |
-|------------|-----|
-| Read → whole large file | `ctx_execute` — only stdout in context |
-| WebFetch → raw HTML | `ctx_fetch_and_index` → `ctx_search` |
-| Multiple grep/find calls | `ctx_batch_execute` |
-
----
 
 ## Git Workflow
 
