@@ -108,32 +108,11 @@ AI_OS/
 <!-- AUTO:CLAUDE_AGENTS_START -->
 | Агент | Назначение |
 |---|---|
-| `code-reviewer` | Senior code reviewer that evaluates changes across five dimensions — correctness, readability, architecture, security, and performance. Use for thorough code review before merge. |
 | `repo-auditor` | Full repository audit agent. Use when asked to audit the repo, check the full codebase, run a deep analysis, or find all problems across the project. Loads and follows docs/AUDIT_PROMPT.md. |
-| `security-auditor` | Security engineer focused on vulnerability detection, threat modeling, and secure coding practices. Use for security-focused code review, threat analysis, or hardening recommendations. |
-| `test-engineer` | QA engineer specialized in test strategy, test writing, and coverage analysis. Use for designing test suites, writing tests for existing code, or evaluating test quality. |
+| `reviewer` | Жёсткий приёмщик-диагност. Один проход по коду — чистота, корректность, security, тесты. Фиксирует всё подозрительное без правок и без рекомендаций. Решение принимает пользователь. Вызывать перед declaring «готово» на BIG-задачах. |
 <!-- AUTO:CLAUDE_AGENTS_END -->
 
-### Скиллы
-
-<!-- AUTO:CLAUDE_SKILLS_START -->
-| Скилл | Назначение |
-|---|---|
-| `code-review-and-quality` | Conducts multi-axis code review. Use before merging any change. Use when reviewing code written by yourself, another agent, or a human. Use when you need to assess code quality across multiple dimensions before it enters the main branch. |
-| `shipping-and-launch` | Prepares production launches. Use when preparing to deploy to production. Use when you need a pre-launch checklist, when setting up monitoring, when planning a staged rollout, or when you need a rollback strategy. |
-| `spec-driven-development` | Writes a specification before implementation. Use for new features, ambiguous requirements, changes affecting multiple files, or any task that takes more than 30 minutes. |
-| `test-driven-development` | Drives development with tests. Use when implementing any logic, fixing any bug, or changing any behavior. Use when you need to prove that code works, when a bug report arrives, or when you're about to modify existing functionality. |
-<!-- AUTO:CLAUDE_SKILLS_END -->
-
-### Slash-команды
-
-<!-- AUTO:CLAUDE_COMMANDS_START -->
-| Команда | Назначение |
-|---|---|
-| `/audit-repo` | Full repository audit. Runs repo-auditor agent with docs/AUDIT_PROMPT.md — 5 passes, 19 sections. |
-| `/review` | Run a multi-axis code review on the current changes before merging. |
-| `/ship` | Pre-launch gate — run code-reviewer, security-auditor, and test-engineer in parallel, then produce a go/no-go decision. |
-<!-- AUTO:CLAUDE_COMMANDS_END -->
+> Локальные скиллы и slash-команды удалены — используются глобальные навыки Claude Code и встроенные CLI-команды.
 
 ---
 

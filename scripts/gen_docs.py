@@ -5,8 +5,6 @@ Sources:
   - runtime/core/agent_registry.py  → mode lists/tables
   - runtime/core/config.py          → providers, model aliases
   - .claude/agents/*.md             → Claude Code agents
-  - .claude/skills/*/SKILL.md       → Claude Code skills
-  - .claude/commands/*.md           → Claude Code slash-commands
   - dot-folders at root + ADAPTERS/ → AI tool adapters
 
 Targets (sections between AUTO markers):
@@ -155,31 +153,6 @@ def _claude_agents() -> str:
     return "\n".join(lines)
 
 
-def _claude_skills() -> str:
-    skills_dir = ROOT / ".claude" / "skills"
-    if not skills_dir.exists():
-        return "_Нет скиллов._"
-    lines = ["| Скилл | Назначение |", "|---|---|"]    
-    for d in sorted(skills_dir.iterdir()):
-        skill_file = d / "SKILL.md"
-        if d.is_dir() and skill_file.exists():
-            name, desc = _parse_frontmatter(skill_file)
-            label = name or d.name
-            lines.append(f"| `{label}` | {desc or '—'} |")
-    return "\n".join(lines)
-
-
-def _claude_commands() -> str:
-    commands_dir = ROOT / ".claude" / "commands"
-    if not commands_dir.exists():
-        return "_Нет команд._"
-    lines = ["| Команда | Назначение |", "|---|---|"]    
-    for f in sorted(commands_dir.glob("*.md")):
-        _, desc = _parse_frontmatter(f)
-        lines.append(f"| `/{f.stem}` | {desc or '—'} |")
-    return "\n".join(lines)
-
-
 # ── File patching ──────────────────────────────────────────────────────────────
 
 def _replace_section(text: str, marker: str, new_content: str) -> tuple[str, bool]:
@@ -232,8 +205,6 @@ def main(check: bool = False) -> int:
             ("PROVIDERS_TABLE",  _providers_table()),
             ("AI_TOOLS",         _ai_tools_table()),
             ("CLAUDE_AGENTS",    _claude_agents()),
-            ("CLAUDE_SKILLS",    _claude_skills()),
-            ("CLAUDE_COMMANDS",  _claude_commands()),
         ],
         check,
     )
