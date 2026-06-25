@@ -2,6 +2,8 @@
 
 > Это тонкий адаптер для Claude. Универсальные правила — в `SYSTEM.md`.
 > Читай `SYSTEM.md`, `MEMORY/lessons/lessons.md` и `MEMORY/tasks/todo.md` в начале каждого чата.
+>
+> Если пользователь спрашивает «какие глобальные баги», «что чинить во всех репо», «общий cross-repo todo» — читать `MEMORY/tasks/cross-repo-todo.md` и докладывать по приоритету. Туда же добавляются обнаруженные кросс-проектные проблемы без немедленного фикса (пассивный регистр).
 
 ---
 
@@ -10,6 +12,8 @@
 В начале каждой сессии прочитать из репо `arsid0305/llm_wiki` (ветка `main`):
 - `wiki/lessons.md` — кросс-проектные уроки
 - `wiki/decisions.md` — ключевые архитектурные решения
+- `wiki/workflow.md` — единый git/CI workflow + выбор модели (haiku/sonnet/opus)
+- `wiki/context-mode.md` — защита контекстного окна
 
 Даёт контекст по всем проектам без объяснений от пользователя.
 
@@ -17,11 +21,11 @@
 
 ## Начало и окончание сессии
 
-Правила в `SYSTEM.md` раздел 8 — универсально для всех ИИ. Триггеры конца сессии распознавать **семантически**.
+Правила в `SYSTEM.md §8` — универсально для всех ИИ. Триггеры конца сессии распознавать **семантически**.
 
 ---
 
-## Правила краткости
+## Правила краткости (канон для Claude во всех репо)
 
 - Без вступлений: не писать "Sure!", "Of course!", "Отличный вопрос!" и подобное
 - Без повторения задачи перед ответом
@@ -44,7 +48,7 @@ bash /tmp/arsid-template/init.sh /path/to/new-project claude
 
 ---
 
-## Subagents
+## Subagents (канон для Claude во всех репо)
 
 **Приоритет:** когда задача подходит для субагента — использовать субагента, не делать в основном контексте. Пользователь не программист, размышления в основном чате ему не информативны. Субагент возвращает только итог — экономия токенов и шума.
 
@@ -55,19 +59,15 @@ bash /tmp/arsid-template/init.sh /path/to/new-project claude
 
 Один subagent — одна фокусная задача.
 
+**Параллельный запуск — только с `isolation: "worktree"`** (см. `SYSTEM.md §9`).
+
 ---
 
 ## Выбор модели
 
-Автоматически по сложности задачи. Явно указывать только если нужно переопределить.
+Канон — `arsid0305/llm_wiki/wiki/workflow.md` (раздел «Выбор модели»). Таблица `haiku` / `sonnet` / `opus` там.
 
-| Задача | Классификация | Модель |
-|---|---|---|
-| Поиск, чтение, grep, простые вопросы | SMALL | `haiku` |
-| Код, отладка, стандартные задачи | SMALL/BIG | `sonnet` (default) |
-| Архитектура, аудит, сложный анализ | BIG | `opus` |
-
-Критерии SMALL/BIG — в `SYSTEM.md` раздел 3.
+Критерии SMALL/BIG — `SYSTEM.md §3`.
 
 ---
 
@@ -94,37 +94,9 @@ bash /tmp/arsid-template/init.sh /path/to/new-project claude
 
 ## context-mode — защита контекстного окна
 
-> context-mode MCP установлен. Хуки активны: PreToolUse, PostToolUse, PreCompact, SessionStart.
-> В новой web-сессии восстанавливать: `bash /home/user/AI_OS/scripts/setup_context_mode.sh`
+Канон — `arsid0305/llm_wiki/wiki/context-mode.md`. Routing rules, иерархия выбора инструментов, команды `ctx stats / doctor / upgrade / purge` — там.
 
-### Routing rules (MANDATORY)
-
-**Think in Code:** анализ/поиск/фильтрация данных → писать скрипт через `ctx_execute(language, code)`, только stdout попадает в контекст. Не читать сырые данные.
-
-**Заблокировано:** `curl`, `wget`, inline HTTP (`fetch(`, `requests.get(`), `WebFetch` — использовать `ctx_fetch_and_index(url, source)` или `ctx_execute`.
-
-**Перенаправить в sandbox:**
-- `Bash` (>20 строк вывода) → `ctx_batch_execute` или `ctx_execute(language: "shell", ...)`
-- `Read` для анализа/исследования → `ctx_execute_file(path, language, code)`
-- `Grep` → `ctx_execute(language: "shell", code: "grep ...")`
-
-**Иерархия выбора инструментов:**
-1. `ctx_search(sort: "timeline")` — после resume, проверить историю до вопроса пользователю
-2. `ctx_batch_execute(commands, queries)` — сбор данных, один вызов вместо 30+
-3. `ctx_search(queries: [...])` — все вопросы массивом, один вызов
-4. `ctx_execute` / `ctx_execute_file` — обработка в sandbox
-5. `ctx_fetch_and_index` → `ctx_search` — веб без HTML в контексте
-
-**После компрессии:** НЕ спрашивать «что мы делали?» — сначала `ctx_search(queries: ["summary"], source: "compaction", sort: "timeline")`.
-
-### Команды
-
-| Команда | Действие |
-|---|---|
-| `ctx stats` | Вызвать `ctx_stats`, показать вывод |
-| `ctx doctor` | Вызвать `ctx_doctor`, запустить команду, показать чеклист |
-| `ctx upgrade` | Вызвать `ctx_upgrade`, запустить команду |
-| `ctx purge` | Вызвать `ctx_purge` с `confirm: true` — очищает базу знаний |
+**AI_OS-специфика:** установка через `bash /home/user/AI_OS/scripts/setup_context_mode.sh` (обязательная первая команда web-сессии — см. секцию ниже).
 
 ---
 
@@ -141,31 +113,22 @@ bash /tmp/arsid-template/init.sh /path/to/new-project claude
 
 ---
 
-## Рабочий процесс
+## Git workflow + правила редактирования файлов
 
-1. Claude пишет код → пушит в ветку `claude/...` → создаёт PR в `main`
-2. `automerge.yml` прогоняет `pytest` → мержит PR через GitHub API (без shell-команд)
-3. Требует: Settings → General → "Allow auto-merge" включён в репо
-4. При конфликте с `main` — ребейзить локально и пушать заново
-5. Никогда не мержить в `main` вручную без явного подтверждения пользователя
+Канон — `SYSTEM.md §10` (PR flow, ветки `claude/...`, запрет флагов `--no-verify`/`--force`/`--no-gpg-sign`, правила `Read → Edit → commit → push`, запрет `push_files` для кода).
 
 ---
 
-## Правила Git
+## ⚠️ ОБЯЗАТЕЛЬНАЯ ПЕРВАЯ КОМАНДА КАЖДОЙ WEB-СЕССИИ
 
-- Разрабатывать на ветке `claude/...`, никогда не пушить напрямую в `main`
-- Никогда не использовать `--no-verify`, `--force`, `--no-gpg-sign`
-- **В начале каждой сессии** — первая команда всегда:
-  ```bash
-  git pull origin main
-  ```
-  Main уходит вперёд пока ветка живёт. Без pull — работаешь на устаревшем коде.
+**Перед чтением SESSION_LOG, перед `git pull`, перед всем остальным — выполнить:**
 
----
+```bash
+bash /home/user/AI_OS/scripts/setup_context_mode.sh
+```
 
-## Правила редактирования файлов
+Контейнер Claude Code web ephemeral — `context-mode` MCP и хуки сбрасываются при старте каждой сессии. Без них окно контекста заполняется в 3-5 раз быстрее (нет `ctx_execute` для sandbox, нет `ctx_fetch_and_index` для веб, все большие выводы `Bash`/`Read`/`MCP` идут напрямую в контекст).
 
-- Всегда: `Read` → `Edit` → `git commit` → `git push`
-- `Edit` меняет только нужные строки — файл не трогается целиком
-- **Запрещено** использовать `push_files` (GitHub API) для кода — требует весь файл целиком, риск обрезки и опечаток
-- Если `git commit` не работает (ошибка подписи) — сообщить пользователю и остановиться, не обходить через `push_files`
+**Признак что НЕ установлено:** нет инструментов `ctx_*` в доступных tools. Проверить: попытаться вызвать `ctx_stats` — если 404 / not found → срочно запустить setup.
+
+**Никаких исключений.** Даже на «короткие» задачи. Даже если кажется что «и так всё ок».
