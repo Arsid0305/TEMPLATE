@@ -21,7 +21,7 @@ bash /tmp/arsid-template/init.sh /path/to/new-project claude
 ```
 TEMPLATE/
 ├── SYSTEM.md              ← ты здесь (читать первым)
-├── CLAUDE.md              ← адаптер для Claude Code (синхронизируется из AI_OS)
+├── CLAUDE.md              ← адаптер для Claude Code (тонкий, TEMPLATE-специфичный)
 ├── SECURITY.md            ← чеклист безопасности перед деплоем
 ├── NEW_PROJECT.md         ← шаблон контекста нового проекта (плейсхолдеры)
 ├── QUICKSTART.md          ← быстрый старт
@@ -35,9 +35,8 @@ TEMPLATE/
 │   └── deploy.yml         ← Supabase Edge Functions deploy
 ├── .github/workflows/
 │   └── automerge.yml      ← CI для самого TEMPLATE-репо
-├── .claude/agents/        ← субагенты Claude Code (синхронизируется из AI_OS)
+├── .claude/               ← агенты + хуки Claude Code (синхронизируется из AI_OS)
 ├── .cursor/               ← правила Cursor (синхронизируется из AI_OS)
-├── skills_sistem/         ← когнитивные скиллы (синхронизируется из AI_OS)
 ├── docs/
 │   ├── AUDIT_PROMPT.md    ← reference-промпт для аудитов репо
 │   └── ARCHITECTURE.md    ← архитектурный скелет с AUTO-маркерами
@@ -98,16 +97,14 @@ TEMPLATE/
 
 ## 7. Синхронизация с AI_OS
 
-TEMPLATE автоматически получает обновления из AI_OS при каждом пуше в `main` AI_OS:
+TEMPLATE автоматически получает обновления из AI_OS при каждом пуше в `main` AI_OS (workflow `sync-to-template.yml` в AI_OS):
 
-- `.claude/` — субагенты и конфиги Claude Code
+- `.claude/` — агенты и хуки Claude Code
 - `.cursor/` — правила Cursor
-- `ADAPTERS/` — веб-адаптеры
-- `skills_sistem/` — когнитивные скиллы
-- `CLAUDE.md` — адаптер Claude Code
-- `scripts/gen_docs.py`, `docs/ARCHITECTURE.md`
+- `ADAPTERS/` — веб-адаптеры (ChatGPT, Gemini, Codex, Claude Web)
+- `.github/workflows/automerge.yml` — CI
 
-**Не синхронизируется:** `SYSTEM.md`, `NEW_PROJECT.md`, `SECURITY.md`, `init.sh`, `adapters/`, `workflows/` — поддерживаются вручную в TEMPLATE.
+**Не синхронизируется** (тонкие TEMPLATE-специфичные адаптеры / не пригодные для шаблона): `CLAUDE.md`, `SYSTEM.md`, `NEW_PROJECT.md`, `SECURITY.md`, `init.sh`, `adapters/`, `workflows/`, `docs/ARCHITECTURE.md`, `skills_sistem/`, `scripts/gen_docs.py`.
 
 ---
 
