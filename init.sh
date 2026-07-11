@@ -10,9 +10,10 @@ set -euo pipefail
 TARGET=${1:-.}
 ADAPTER=${2:-claude}
 
-# Validate TARGET — reject obviously dangerous paths
+# Validate TARGET — reject obviously dangerous paths (including subpaths)
 case "$TARGET" in
-  / | /etc | /usr | /bin | /sbin | /lib | /boot | /sys | /proc)
+  / | /etc | /etc/* | /usr | /usr/* | /bin | /bin/* | /sbin | /sbin/* | \
+  /lib | /lib/* | /boot | /boot/* | /sys | /sys/* | /proc | /proc/* | /dev | /dev/*)
     echo "ERROR: Refusing to initialize into system path: $TARGET" >&2
     exit 1
     ;;
@@ -31,11 +32,17 @@ fi
 
 mkdir -p "$TARGET/.github/workflows" "$TARGET/tasks" "$TARGET/docs" "$TARGET/scripts"
 
-if cp "$TEMPLATE_DIR"/workflows/*.yml "$TARGET/.github/workflows/" 2>/dev/null; then
-  echo "Copied workflows"
-else
-  echo "WARNING: No workflow files found to copy" >&2
-fi
+# Copy only automerge.yml by default (canonical CI).
+# Other workflows (deploy.yml для Supabase) — по запросу через WORKFLOWS env var.
+WORKFLOWS="${WORKFLOWS:-automerge.yml}"
+for wf in $WORKFLOWS; do
+  if [ -f "$TEMPLATE_DIR/workflows/$wf" ]; then
+    cp "$TEMPLATE_DIR/workflows/$wf" "$TARGET/.github/workflows/$wf"
+    echo "Copied workflow: $wf"
+  else
+    echo "WARNING: workflow $wf not found in template" >&2
+  fi
+done
 
 touch "$TARGET/tasks/todo.md" "$TARGET/tasks/lessons.md"
 
@@ -70,9 +77,15 @@ fi
 
 ADAPTER_UPPER="$(echo "$ADAPTER" | tr '[:lower:]' '[:upper:]')"
 ADAPTER_SRC="$TEMPLATE_DIR/adapters/${ADAPTER_UPPER}.md"
+case "$ADAPTER" in
+  claude) DEST="$TARGET/CLAUDE.md" ;;
+  cursor) mkdir -p "$TARGET/.cursor/rules"; DEST="$TARGET/.cursor/rules/project.mdc" ;;
+  openai) DEST="$TARGET/AGENTS.md" ;;
+  *)      DEST="$TARGET/CLAUDE.md" ;;
+esac
 if [ -f "$ADAPTER_SRC" ]; then
-  cp "$ADAPTER_SRC" "$TARGET/CLAUDE.md"
-  echo "Copied adapter: $ADAPTER"
+  cp "$ADAPTER_SRC" "$DEST"
+  echo "Copied adapter: $ADAPTER → $(basename "$DEST")"
 else
   echo "WARNING: Adapter not found: $ADAPTER (skipped)" >&2
 fi
@@ -80,5 +93,5 @@ fi
 echo ""
 echo "Done. Next steps:"
 echo "  1. Fill in NEW_PROJECT.md placeholders"
-echo "  2. Remove unused workflows from .github/workflows/"
+echo "  2. Optional: install additional workflows via WORKFLOWS='automerge.yml deploy.yml' bash init.sh ..."
 echo "  3. Add GitHub Secrets if using Supabase: SBP_ACCESS_TOKEN, SUPABASE_PROJECT_REF"

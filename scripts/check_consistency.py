@@ -30,33 +30,45 @@ def main() -> None:
     except OSError as exc:
         fail(f"Cannot read QUICKSTART.md: {exc}")
 
-    # 2. automerge.yml: uses explicit branches allowlist, not branches-ignore
-    try:
-        automerge = (root / ".github" / "workflows" / "automerge.yml").read_text()
-        if "branches-ignore" in automerge:
-            fail("automerge.yml: uses 'branches-ignore' — should use explicit branches: [claude/**, cursor/**]")
-        if "claude/**" not in automerge:
-            fail("automerge.yml: missing 'claude/**' in branches filter")
-        if "cursor/**" not in automerge:
-            fail("automerge.yml: missing 'cursor/**' in branches filter")
-    except OSError as exc:
-        fail(f"Cannot read .github/workflows/automerge.yml: {exc}")
+    # 2. Both automerge.yml (self CI + template shipped to new projects) filter claude/cursor branches
+    for wf_path in [
+        root / ".github" / "workflows" / "automerge.yml",
+        root / "workflows" / "automerge.yml",
+    ]:
+        try:
+            wf = wf_path.read_text()
+            if "branches-ignore" in wf:
+                fail(f"{wf_path.relative_to(root)}: uses 'branches-ignore' — should filter head via startsWith")
+            if "'claude/'" not in wf:
+                fail(f"{wf_path.relative_to(root)}: missing claude/ head filter")
+            if "'cursor/'" not in wf:
+                fail(f"{wf_path.relative_to(root)}: missing cursor/ head filter")
+            if "pull_request_target" not in wf:
+                fail(f"{wf_path.relative_to(root)}: не использует pull_request_target — API-PR не триггерят workflow")
+        except OSError as exc:
+            fail(f"Cannot read {wf_path.relative_to(root)}: {exc}")
 
     # 3. Adapter files exist
     for adapter in ["adapters/CLAUDE.md", "adapters/CURSOR.md", "adapters/OPENAI.md"]:
         if not (root / adapter).exists():
             fail(f"Missing adapter file: {adapter}")
 
-    # 4. No adapter or SYSTEM.md mentions 'dev' branch in git workflow
+    # 4. No adapter, SYSTEM.md, NEW_PROJECT.md, workflows/*.yml mention 'dev' branch in git workflow
     adapters_dir = root / "adapters"
     system_md = root / "SYSTEM.md"
+    new_project_md = root / "NEW_PROJECT.md"
+    workflows_dir = root / "workflows"
     candidates = list(adapters_dir.glob("*.md")) if adapters_dir.exists() else []
     if system_md.exists():
         candidates.append(system_md)
+    if new_project_md.exists():
+        candidates.append(new_project_md)
+    if workflows_dir.exists():
+        candidates.extend(workflows_dir.glob("*.yml"))
     for md_path in candidates:
         try:
             content = md_path.read_text()
-            if any(pat in content for pat in ["→ dev", "targets `dev`", "targets dev", "into dev"]):
+            if any(pat in content for pat in ["→ dev", "targets `dev`", "targets dev", "into dev", "'dev'", "\"dev\""]):
                 fail(f"{md_path.relative_to(root)}: references 'dev' branch in git workflow rules")
         except OSError as exc:
             fail(f"Cannot read {md_path.name}: {exc}")

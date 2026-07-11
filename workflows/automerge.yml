@@ -1,14 +1,14 @@
 name: Auto-merge claude/cursor branches
 
 on:
-  pull_request:
+  pull_request_target:
     branches: [main]
-    types: [opened, reopened, synchronize]
+    types: [opened, reopened, synchronize, ready_for_review]
 
 jobs:
   automerge:
     runs-on: ubuntu-latest
-    if: startsWith(github.head_ref, 'claude/') || startsWith(github.head_ref, 'cursor/')
+    if: (startsWith(github.head_ref, 'claude/') || startsWith(github.head_ref, 'cursor/')) && github.event.pull_request.draft == false
     permissions:
       pull-requests: write
       contents: write
@@ -21,4 +21,9 @@ jobs:
               repo: context.repo.repo,
               pull_number: context.payload.pull_request.number,
               merge_method: 'squash'
+            })
+            await github.rest.git.deleteRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: `heads/${context.payload.pull_request.head.ref}`
             })
