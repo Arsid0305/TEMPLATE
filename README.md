@@ -45,16 +45,15 @@ CLAUDE.md              ← из adapters/ (зависит от аргумент�
 ```
 TEMPLATE/
 ├── adapters/          ← адаптеры для init.sh (CLAUDE.md, CURSOR.md, OPENAI.md)
-├── ADAPTERS/          ← веб-адаптеры (ChatGPT, Gemini, Claude Web, Codex)
+├── ADAPTERS/          ← веб-адаптеры (ChatGPT, Gemini, Claude Web, Codex) — синкается из AI_OS
 ├── workflows/         ← шаблоны CI/CD (копируются в новые проекты)
-├── docs/              ← AUDIT_PROMPT.md, ARCHITECTURE.md
-├── scripts/           ← утилиты (check_consistency.py, gen_docs.py)
-├── skills_sistem/     ← когнитивные скиллы (синхронизируется из AI_OS)
-├── .claude/agents/    ← субагенты Claude Code (синхронизируется из AI_OS)
-├── .cursor/           ← правила Cursor (синхронизируется из AI_OS)
+├── docs/              ← AUDIT_PROMPT.md
+├── scripts/           ← check_consistency.py
+├── .claude/           ← агенты и хуки Claude Code (синкается из AI_OS)
+├── .cursor/           ← правила Cursor (синкается из AI_OS)
 ├── init.sh            ← скрипт инициализации
 ├── SYSTEM.md          ← контекст TEMPLATE-репо для AI
-├── CLAUDE.md          ← адаптер Claude Code для работы в TEMPLATE
+├── CLAUDE.md          ← адаптер Claude Code для работы в TEMPLATE (тонкий, не синкается)
 └── SECURITY.md        ← чеклист безопасности перед деплоем
 ```
 
@@ -71,9 +70,8 @@ TEMPLATE/
 
 | Файл | Назначение |
 |---|---|
-| `workflows/automerge.yml` | Любая ветка → dev авто-мерж |
-| `workflows/promote.yml` | dev → main после сборки |
-| `workflows/deploy.yml` | Supabase Edge Functions deploy |
+| `workflows/automerge.yml` | `claude/**` \| `cursor/**` → main via GitHub API (squash + deleteRef) |
+| `workflows/deploy.yml` | Supabase Edge Functions deploy (опционально) |
 
 Скопируй нужные в `.github/workflows/` нового проекта, удали ненужные.
 
@@ -81,6 +79,6 @@ TEMPLATE/
 
 ## Синхронизация с AI_OS
 
-Инфраструктура (`.claude/`, `.cursor/`, `ADAPTERS/`, `skills_sistem/`, `CLAUDE.md`) автоматически синхронизируется из [arsid0305/ai_os](https://github.com/arsid0305/ai_os) через `sync-to-template.yml` при каждом пуше в `main` AI_OS.
+Из [arsid0305/ai_os](https://github.com/arsid0305/ai_os) через `sync-to-template.yml` при пуше в `main` AI_OS автоматически перезаписываются: `.claude/`, `.cursor/`, `ADAPTERS/`, `.github/workflows/automerge.yml`.
 
-Файлы, которые **не** перезаписываются при синхронизации: `SYSTEM.md`, `NEW_PROJECT.md`, `SECURITY.md`, `init.sh`, `adapters/`, `workflows/`.
+**Не** синхронизируются (тонкие TEMPLATE-специфичные): `SYSTEM.md`, `CLAUDE.md`, `NEW_PROJECT.md`, `SECURITY.md`, `init.sh`, `adapters/`, `workflows/`, `docs/`, `scripts/`.
