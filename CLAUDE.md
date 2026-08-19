@@ -15,15 +15,22 @@
 
 ---
 
-## Каноны (не дублировать)
+## Каноны (rules как атомы)
 
-- Начало / конец сессии — `SYSTEM.md §8`
-- Правила краткости — `AI_OS/SYSTEM.md §4`
-- Git flow, запрет флагов, редактирование — `AI_OS/SYSTEM.md §10` + `SYSTEM.md §6`
+Все универсальные правила — в `docs/rules/core/*.md` (синхронизируется из AI_OS, SSOT). Читать нужное по имени:
+
+- Начало / конец сессии — [`docs/rules/core/session-lifecycle.md`](docs/rules/core/session-lifecycle.md)
+- Стиль общения — [`docs/rules/core/communication-style.md`](docs/rules/core/communication-style.md)
+- Git flow, запрет флагов, правила редактирования — [`docs/rules/core/git-flow.md`](docs/rules/core/git-flow.md)
+- GitHub anti-abuse — [`docs/rules/core/github-anti-abuse.md`](docs/rules/core/github-anti-abuse.md)
+- SMALL / BIG критерии — [`docs/rules/core/task-classification.md`](docs/rules/core/task-classification.md)
+- Принципы работы с кодом — [`docs/rules/core/code-principles.md`](docs/rules/core/code-principles.md)
+- Subagents (worktree, JSON-schema контракты) — [`docs/rules/core/subagents.md`](docs/rules/core/subagents.md)
+- Audit-триггер — [`docs/rules/core/audit-trigger.md`](docs/rules/core/audit-trigger.md)
 - Выбор модели `haiku`/`sonnet`/`opus` — `llm_wiki/wiki/workflow.md`
-- SMALL/BIG критерии — `SYSTEM.md §3`
 - Context Mode — `llm_wiki/wiki/context-mode.md`
-- Subagents — `AI_OS/CLAUDE.md`
+
+Архитектура rules и правила синка — [`docs/rules/README.md`](docs/rules/README.md).
 
 ---
 

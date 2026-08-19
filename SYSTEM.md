@@ -1,6 +1,7 @@
 # SYSTEM.md — TEMPLATE
 
 > Читай этот файл в начале каждого нового чата в этом репозитории.
+> Правила экосистемы — в `docs/rules/core/*.md` (синхронизируется из AI_OS).
 
 ---
 
@@ -14,18 +15,24 @@ git clone https://github.com/Arsid0305/TEMPLATE /tmp/arsid-template
 bash /tmp/arsid-template/init.sh /path/to/new-project claude
 ```
 
+`init.sh` копирует в новый проект в том числе `docs/rules/core/` — новый проект сразу получает актуальные правила экосистемы.
+
 ---
 
 ## 2. Структура репозитория
 
 ```
 TEMPLATE/
-├── SYSTEM.md              ← ты здесь (читать первым)
-├── CLAUDE.md              ← адаптер для Claude Code (тонкий, TEMPLATE-специфичный)
+├── SYSTEM.md              ← ты здесь (тонкий адаптер)
+├── CLAUDE.md              ← адаптер для Claude Code (TEMPLATE-специфичный)
 ├── SECURITY.md            ← чеклист безопасности перед деплоем
 ├── NEW_PROJECT.md         ← шаблон контекста нового проекта (плейсхолдеры)
 ├── QUICKSTART.md          ← быстрый старт
 ├── init.sh                ← скрипт инициализации нового проекта
+├── docs/rules/            ← ⭐ ПРАВИЛА ЭКОСИСТЕМЫ (синхронизируется из AI_OS)
+│   ├── README.md          ← архитектура rules
+│   ├── core/              ← always-on rules (8 файлов)
+│   └── scoped/            ← path-scoped (специфика проекта, добавляется локально)
 ├── adapters/              ← адаптеры для init.sh (CLAUDE.md, CURSOR.md, OPENAI.md)
 ├── ADAPTERS/              ← веб-адаптеры (ChatGPT, Gemini, Codex, Claude Web)
 │   └── [синхронизируется из AI_OS автоматически]
@@ -39,7 +46,8 @@ TEMPLATE/
 ├── .cursor/               ← правила Cursor (синхронизируется из AI_OS)
 ├── docs/
 │   ├── AUDIT_PROMPT.md    ← reference-промпт для аудитов репо
-│   └── ARCHITECTURE.md    ← архитектурный скелет с AUTO-маркерами
+│   ├── ARCHITECTURE.md    ← архитектурный скелет с AUTO-маркерами
+│   └── rules/             ← (см. выше — вынесено отдельным блоком)
 └── scripts/
     └── gen_docs.py        ← генерация документации
 ```
@@ -53,49 +61,39 @@ TEMPLATE/
 
 ---
 
-## 3. Классификация задач
+## 3. Rules — правила экосистемы
 
-Канон — `AI_OS/SYSTEM.md §3` (BIG / SMALL критерии).
+Универсальные правила экосистемы — в `docs/rules/core/*.md`. **TEMPLATE не редактирует их вручную** — они синхронизируются из AI_OS через `.github/workflows/sync-to-template.yml` в AI_OS.
 
----
+Ссылки на правила:
+- Классификация задач (SMALL / BIG) → [`docs/rules/core/task-classification.md`](docs/rules/core/task-classification.md)
+- Стиль общения → [`docs/rules/core/communication-style.md`](docs/rules/core/communication-style.md)
+- Принципы работы с кодом → [`docs/rules/core/code-principles.md`](docs/rules/core/code-principles.md)
+- Git flow → [`docs/rules/core/git-flow.md`](docs/rules/core/git-flow.md)
+- GitHub anti-abuse → [`docs/rules/core/github-anti-abuse.md`](docs/rules/core/github-anti-abuse.md)
+- Session lifecycle → [`docs/rules/core/session-lifecycle.md`](docs/rules/core/session-lifecycle.md)
+- Subagents → [`docs/rules/core/subagents.md`](docs/rules/core/subagents.md)
+- Audit trigger → [`docs/rules/core/audit-trigger.md`](docs/rules/core/audit-trigger.md)
 
-## 4. Стиль общения
-
-- Русский язык в чате, английский в коде
-- Отвечать конкретно, без воды
-- Задавать уточняющие вопросы перед BIG-задачами
-- Не придумывать scope сверх запроса
-- Комментарии в коде — только когда WHY неочевиден
-
----
-
-## 5. Принципы работы с кодом
-
-- Не добавлять фичи без запроса
-- Не рефакторить «заодно»
-- Не создавать абстракции под гипотетическое будущее
-- Простой код лучше «правильного»
-- DRY: дублирующийся код выносить явно — три похожих строки уже сигнал
-- Verification: перед «готово» прогнать тесты/CLI на golden path + edge case
-- Безопасность: никакого command injection, path traversal, hardcoded secrets
+Архитектура и правила синка — [`docs/rules/README.md`](docs/rules/README.md).
 
 ---
 
-## 6. Рабочий процесс CI/CD
+## 4. TEMPLATE-специфика — CI/CD
 
-### Auto-merge (automerge.yml)
+### Auto-merge (`workflows/automerge.yml` — для новых проектов, `.github/workflows/automerge.yml` — для самого TEMPLATE)
 - Ветки `claude/...` и `cursor/...` мержатся автоматически через GitHub API
 - Триггер: открытие/обновление PR в `main`
-- Мерж происходит через `github-script` (squash) — без shell-команд, без injection-рисков
-- Требует: Settings → General → "Allow auto-merge" включён в репо
+- Мерж через `github-script` (squash) — без shell-команд, без injection-рисков
+- Требует: Settings → General → «Allow auto-merge» включён в репо
 
-### Promote (promote.yml)
+### Promote (`workflows/promote.yml`)
 - Ручной запуск через `workflow_dispatch` (не автоматический)
 - Продвигает `dev` → `main` после сборки и аудита
 
 ---
 
-## 7. Синхронизация с AI_OS
+## 5. Синхронизация с AI_OS
 
 TEMPLATE автоматически получает обновления из AI_OS при каждом пуше в `main` AI_OS (workflow `sync-to-template.yml` в AI_OS):
 
@@ -103,79 +101,12 @@ TEMPLATE автоматически получает обновления из A
 - `.cursor/` — правила Cursor
 - `ADAPTERS/` — веб-адаптеры (ChatGPT, Gemini, Codex, Claude Web)
 - `.github/workflows/automerge.yml` — CI
+- **`docs/rules/core/`** + **`docs/rules/README.md`** — SSOT правил экосистемы
 
-**Не синхронизируется** (тонкие TEMPLATE-специфичные адаптеры / не пригодные для шаблона): `CLAUDE.md`, `SYSTEM.md`, `NEW_PROJECT.md`, `SECURITY.md`, `init.sh`, `adapters/`, `workflows/`, `docs/ARCHITECTURE.md`, `skills_sistem/`, `scripts/gen_docs.py`.
+**Не синхронизируется** (тонкие TEMPLATE-специфичные адаптеры / не пригодные для шаблона): `CLAUDE.md`, `SYSTEM.md`, `NEW_PROJECT.md`, `SECURITY.md`, `init.sh`, `adapters/`, `workflows/`, `docs/AUDIT_PROMPT.md`, `docs/ARCHITECTURE.md`, `skills_sistem/`, `scripts/gen_docs.py`, `docs/rules/scoped/`.
 
 ---
 
-## 8. Начало и окончание сессии (для всех ИИ)
+## 6. Начало и окончание сессии
 
-Универсальное правило памяти. Применяется к Claude, ChatGPT, Codex, Gemini, Cursor — любому AI-ассистенту работающему с этим репозиторием.
-
-### Подключённые репозитории (требование)
-
-Любая сессия с ИИ должна иметь доступ к следующим репозиториям:
-
-- `arsid0305/ai_os` — ядро системы (SYSTEM.md, CLAUDE.md, MEMORY)
-- `arsid0305/template` — шаблон новых проектов
-- `arsid0305/llm_wiki` — кросс-проектные уроки и архитектурные решения (Obsidian-vault пользователя)
-- Активный рабочий проект — добавляется индивидуально под задачу сессии
-
-Если репозиторий не подключён — попросить пользователя добавить его в настройках сессии.
-
-### В начале сессии
-
-1. Прочитать `SYSTEM.md`, `MEMORY/lessons/lessons.md` (если есть)
-2. Прочитать `wiki/lessons.md` и `wiki/decisions.md` из `arsid0305/llm_wiki` (ветка `main`)
-3. Прочитать `MEMORY/tasks/todo.md` (если есть) — учитывать **только** секции с меткой `[актуально]`, игнорировать `[устарело]`
-4. Если в todo есть незакрытая задача — спросить пользователя продолжить или взять новую
-
-### В конце сессии — распознавать триггеры СЕМАНТИЧЕСКИ
-
-Любое сообщение пользователя со смыслом «сессия заканчивается → сохрани контекст» — это триггер. Не привязываться к точным фразам.
-
-Конкретные примеры триггер-фраз (не ограничиваться ими):
-
-- «новая сессия» / «будет новая сессия» / «следующая сессия»
-- «идём / переходим / перейдём в новую сессию»
-- «сделай резюме для новой сессии» / «сделай вывод для новой сессии»
-- «соберём / подведём итог / резюме сессии»
-- «сохрани / запиши контекст / память / для следующего раза»
-- «продолжим / встретимся завтра / позже / в другой раз»
-- «на сегодня хватит / достаточно / всё»
-- «закрываем / завершаем / останавливаем сессию»
-- «эта сессия заканчивается»
-
-**Сомневаешься триггер или нет — спроси** «это завершение сессии — обновить todo?» вместо того чтобы пропустить.
-
-### Действия при триггере
-
-1. Обновить (или создать) `MEMORY/tasks/todo.md`:
-   - Найти предыдущую секцию `[актуально]` и сменить метку на `[устарело]`
-   - Добавить новую секцию вверху файла с заголовком `## [YYYY-MM-DD — актуально]`
-   - В секцию записать:
-     - Что **не доделано**
-     - Следующий **приоритет**
-     - **Контекст** которого нет в коде (решения, ограничения, блокеры, ссылки на PDF/документы, открытые вопросы к пользователю)
-2. Закоммитить, запушить, **смержить PR в main** (иначе следующая сессия не увидит)
-3. Только после этого попрощаться
-
-### Формат секции todo.md
-
-```md
-## [YYYY-MM-DD — актуально]
-- Следующий приоритет: ...
-- Не доделано: ...
-- Контекст: ...
-
-## [YYYY-MM-DD — устарело]
-- ...
-```
-
-### При компрессии контекста — сохранить
-
-- Текущую задачу и её статус (из `MEMORY/tasks/todo.md`)
-- Архитектурные решения принятые в этой сессии
-- Пути файлов с которыми работаем прямо сейчас
-- Незакрытые вопросы к пользователю
-- Ограничения среды (что не работает и почему)
+См. [`docs/rules/core/session-lifecycle.md`](docs/rules/core/session-lifecycle.md) — универсальное правило для всех ИИ и репо. Триггеры конца сессии распознавать **семантически**.
