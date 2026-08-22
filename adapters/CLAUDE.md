@@ -44,3 +44,22 @@ LIMITATIONS:
 
 - Branch: `claude/<description>` — auto-merges to main via CI after tests pass
 - PRs are optional, automerge triggers on push regardless
+
+---
+
+## Ecosystem Rules
+
+Universal rules are in `docs/rules/core/*.md` (synced from AI_OS SSOT via `init.sh`). Read on demand:
+
+- Task classification (SMALL / BIG) — [`docs/rules/core/task-classification.md`](docs/rules/core/task-classification.md)
+- Communication style — [`docs/rules/core/communication-style.md`](docs/rules/core/communication-style.md)
+- Code principles (DRY, verification, no over-engineering) — [`docs/rules/core/code-principles.md`](docs/rules/core/code-principles.md)
+- Git flow (branches, PR, forbidden flags) — [`docs/rules/core/git-flow.md`](docs/rules/core/git-flow.md)
+- GitHub anti-abuse (rate limits) — [`docs/rules/core/github-anti-abuse.md`](docs/rules/core/github-anti-abuse.md)
+- Session lifecycle (start/end, todo/lessons format) — [`docs/rules/core/session-lifecycle.md`](docs/rules/core/session-lifecycle.md)
+- Subagents (worktree isolation, JSON-schema contracts) — [`docs/rules/core/subagents.md`](docs/rules/core/subagents.md)
+- Audit trigger — [`docs/rules/core/audit-trigger.md`](docs/rules/core/audit-trigger.md)
+
+Architecture and sync rules — [`docs/rules/README.md`](docs/rules/README.md).
+
+Project-specific rules live in `docs/rules/scoped/*.md` (edited locally, not synced).
