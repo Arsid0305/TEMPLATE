@@ -9,6 +9,9 @@
 
 1. ChatGPT → Explore GPTs → My GPTs → Configure
 2. Вставить содержимое `SYSTEM.md` в поле Instructions
+3. Дополнительно вставить `ADAPTERS/chatgpt/active-rules.md` — оперативные правила поведения (канон в `AI_OS/MEMORY/rules/active.md`)
+
+**Обновление правил:** при изменении `active.md` запустить `bash scripts/sync-active-rules.sh` → скопировать обновлённый `active-rules.md` в Project Instructions заново.
 
 **Или в начале каждого чата:**
 

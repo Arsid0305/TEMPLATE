@@ -70,15 +70,14 @@ TEMPLATE/
 
 | Файл | Назначение |
 |---|---|
-| `workflows/automerge.yml` | `claude/**` \| `cursor/**` → main via GitHub API (squash + deleteRef) |
 | `workflows/deploy.yml` | Supabase Edge Functions deploy (опционально) |
 
-Скопируй нужные в `.github/workflows/` нового проекта, удали ненужные.
+Скопируй нужные в `.github/workflows/` нового проекта, удали ненужные. Автомержа нет: PR мержит владелица кнопкой.
 
 ---
 
 ## Синхронизация с AI_OS
 
-Из [arsid0305/ai_os](https://github.com/arsid0305/ai_os) через `sync-to-template.yml` при пуше в `main` AI_OS автоматически перезаписываются: `.claude/`, `.cursor/`, `ADAPTERS/`, `.github/workflows/automerge.yml`.
+Из [arsid0305/ai_os](https://github.com/arsid0305/ai_os) через `sync-to-template.yml` при пуше в `main` AI_OS автоматически перезаписываются: `.claude/`, `.cursor/`, `ADAPTERS/`, `docs/rules/core/`, `docs/rules/README.md`. ⚠️ Синк выключен вручную с 2026-09-06 — пока правила переносятся руками.
 
 **Не** синхронизируются (тонкие TEMPLATE-специфичные): `SYSTEM.md`, `CLAUDE.md`, `NEW_PROJECT.md`, `SECURITY.md`, `init.sh`, `adapters/`, `workflows/`, `docs/`, `scripts/`.

@@ -19,9 +19,13 @@ _Rule: always-on. Источник: AI_OS/SYSTEM.md §10 (без GitHub Anti-Abu
 
 ## PR flow
 
-- PR в `main` — **не draft** (draft пропускается `automerge.yml`, guard `draft == false`).
-- `automerge.yml` сам включает native auto-merge через GraphQL и сольёт, когда required checks пройдут.
-- Если CI красный — PR висит до следующего push с фиксом.
+- **Один PR на сессию.** Работа копится в одной ветке `claude/...`, в конце — один PR.
+  Если PR сессии уже смержен, а работа продолжилась — новая ветка от `main`, новый PR.
+- PR — обычный, **не draft**.
+- **Мержит владелица, кнопкой.** Моя работа заканчивается так: ветка готова, проверки
+  пройдены, PR открыт — даю ссылку и напоминаю про мерж. Мерж через API запрещён,
+  автомержа нет — см. [`github-anti-abuse.md`](github-anti-abuse.md).
+- Если CI красный — чинить и пушить в ту же ветку, до зелёного.
 
 ## Правила редактирования файлов
 
@@ -32,6 +36,10 @@ _Rule: always-on. Источник: AI_OS/SYSTEM.md §10 (без GitHub Anti-Abu
 
 ## Коммиты — авторство
 
-- **Основной автор коммита — пользователь**, не Claude. `user.email` = email пользователя.
+- **Основной автор коммита — пользователь**, не Claude:
+  `git -c user.name="Arina" -c user.email="254561737+Arsid0305@users.noreply.github.com" commit ...`
+  Адрес — служебный noreply GitHub, а не личная почта: личная почта в аккаунте скрыта,
+  и GitHub отклоняет такой push (`GH007: Your push would publish a private email address`,
+  прецедент 2026-09-24). По noreply-адресу коммит всё равно засчитывается владелице.
 - `Co-Authored-By: Claude <noreply@anthropic.com>` в теле коммита.
 - Ссылку на сессию — в футер (`Claude-Session: https://claude.ai/code/session_...`).

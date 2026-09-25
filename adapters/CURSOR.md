@@ -24,7 +24,7 @@ LIMITATIONS:
 
 ## Git Workflow
 
-- Branch: `cursor/<description>` — auto-merges to main via CI after tests pass
+- Branch: `cursor/<description>` → PR to `main`; the owner merges manually, no auto-merge
 - Use terminal or IDE git panel for staging and commits
 
 ---

@@ -44,7 +44,7 @@ bash /tmp/arsid-template/init.sh /path/to/new-project claude
 
 Опционально скопировать доп. workflows:
 ```bash
-WORKFLOWS='automerge.yml deploy.yml' bash init.sh /path/to/new-project claude
+WORKFLOWS='deploy.yml' bash init.sh /path/to/new-project claude
 ```
 
 ---
@@ -74,7 +74,7 @@ WORKFLOWS='automerge.yml deploy.yml' bash init.sh /path/to/new-project claude
 ## Рабочий процесс
 
 1. Разработка на ветке `claude/...` → PR в `main` (не draft)
-2. `automerge.yml` (`pull_request_target`) мержит PR через GitHub API (squash) + удаляет head-ref
-3. Требует: Settings → General → "Allow auto-merge" включён
+2. Один PR на сессию. **Автомержа нет** (удалён 2026-09-25) — мержит владелица кнопкой.
+3. Мерж через API запрещён — `docs/rules/core/github-anti-abuse.md`.
 
 Никогда не мержить в `main` вручную без явного подтверждения.
