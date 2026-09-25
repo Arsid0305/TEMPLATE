@@ -9,6 +9,9 @@
 
 1. Codex Settings → Custom Instructions
 2. Вставить содержимое `SYSTEM.md`
+3. Дополнительно вставить `ADAPTERS/codex/active-rules.md` — оперативные правила поведения (канон в `AI_OS/MEMORY/rules/active.md`)
+
+**Обновление правил:** при изменении `active.md` запустить `bash scripts/sync-active-rules.sh` → скопировать обновлённый `active-rules.md` в Custom Instructions заново.
 
 **Или в начале каждой задачи:**
 
