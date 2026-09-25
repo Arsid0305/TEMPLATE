@@ -30,13 +30,13 @@ docs/rules/
 
 ## Правила использования
 
-- **`core/`** — SSOT в AI_OS. В остальных репо `core/` **никогда не редактируется вручную** — обновляется через синк из AI_OS (`sync-to-template.yml` + `init.sh`).
+- **`core/`** — SSOT в AI_OS. В остальных репо `core/` **никогда не редактируется вручную** — обновляется переносом из AI_OS (см. «Синхронизация»).
 - **`scoped/`** — специфика конкретного репо (edge-functions, миграции, frontend-компоненты). Живёт локально в репо.
 - **`SYSTEM.md` / `CLAUDE.md`** — тонкий адаптер, ссылается на `docs/rules/core/*.md`, не дублирует содержимое.
 
 ## Синхронизация в другие репо
 
-- **AI_OS → TEMPLATE:** автоматически через `.github/workflows/sync-to-template.yml` (AI_OS pushes rules → TEMPLATE main).
+- **AI_OS → TEMPLATE и остальные репо:** **вручную**, одним PR на репо после изменения `core/`. Автосинк `sync-to-template.yml` выключен с июня (токен удалён) — не рассчитывать на него. При расхождении копии с AI_OS `origin/main` верна AI_OS.
 - **TEMPLATE → новый проект:** при `bash init.sh /path` — `docs/rules/core/` копируется.
 - **TEMPLATE → существующий проект:** `bash scripts/sync-rules.sh <target-repo>` — pull последних `core/`.
 

@@ -31,17 +31,13 @@ TEMPLATE/
 ├── init.sh                ← скрипт инициализации нового проекта
 ├── docs/rules/            ← ⭐ ПРАВИЛА ЭКОСИСТЕМЫ (синхронизируется из AI_OS)
 │   ├── README.md          ← архитектура rules
-│   ├── core/              ← always-on rules (8 файлов)
+│   ├── core/              ← always-on rules (9 файлов)
 │   └── scoped/            ← path-scoped (специфика проекта, добавляется локально)
 ├── adapters/              ← адаптеры для init.sh (CLAUDE.md, CURSOR.md, OPENAI.md)
 ├── ADAPTERS/              ← веб-адаптеры (ChatGPT, Gemini, Codex, Claude Web)
 │   └── [синхронизируется из AI_OS автоматически]
 ├── workflows/             ← шаблоны CI/CD для новых проектов
-│   ├── automerge.yml      ← PR-based auto-merge template (claude/ and cursor/ branches)
-│   ├── promote.yml        ← promotion to main (manual trigger via workflow_dispatch)
 │   └── deploy.yml         ← Supabase Edge Functions deploy
-├── .github/workflows/
-│   └── automerge.yml      ← CI для самого TEMPLATE-репо
 ├── .claude/               ← агенты + хуки Claude Code (синхронизируется из AI_OS)
 ├── .cursor/               ← правила Cursor (синхронизируется из AI_OS)
 ├── docs/
@@ -81,26 +77,19 @@ TEMPLATE/
 
 ## 4. TEMPLATE-специфика — CI/CD
 
-### Auto-merge (`workflows/automerge.yml` — для новых проектов, `.github/workflows/automerge.yml` — для самого TEMPLATE)
-- Ветки `claude/...` и `cursor/...` мержатся автоматически через GitHub API
-- Триггер: открытие/обновление PR в `main`
-- Мерж через `github-script` (squash) — без shell-команд, без injection-рисков
-- Требует: Settings → General → «Allow auto-merge» включён в репо
-
-### Promote (`workflows/promote.yml`)
-- Ручной запуск через `workflow_dispatch` (не автоматический)
-- Продвигает `dev` → `main` после сборки и аудита
+### Мерж — только вручную
+- Автомержа нет (удалён 2026-09-25). PR из `claude/...` и `cursor/...` мержит владелица кнопкой.
+- Канон — `docs/rules/core/github-anti-abuse.md`, `docs/rules/core/git-flow.md`.
 
 ---
 
 ## 5. Синхронизация с AI_OS
 
-TEMPLATE автоматически получает обновления из AI_OS при каждом пуше в `main` AI_OS (workflow `sync-to-template.yml` в AI_OS):
+TEMPLATE получает обновления из AI_OS через workflow `sync-to-template.yml` в AI_OS. ⚠️ С 2026-09-06 он выключен вручную — пока переносить руками:
 
 - `.claude/` — агенты и хуки Claude Code
 - `.cursor/` — правила Cursor
 - `ADAPTERS/` — веб-адаптеры (ChatGPT, Gemini, Codex, Claude Web)
-- `.github/workflows/automerge.yml` — CI
 - **`docs/rules/core/`** + **`docs/rules/README.md`** — SSOT правил экосистемы
 
 **Не синхронизируется** (тонкие TEMPLATE-специфичные адаптеры / не пригодные для шаблона): `CLAUDE.md`, `SYSTEM.md`, `NEW_PROJECT.md`, `SECURITY.md`, `init.sh`, `adapters/`, `workflows/`, `docs/AUDIT_PROMPT.md`, `docs/ARCHITECTURE.md`, `skills_sistem/`, `scripts/gen_docs.py`, `docs/rules/scoped/`.

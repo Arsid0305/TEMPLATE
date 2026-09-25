@@ -32,9 +32,10 @@ fi
 
 mkdir -p "$TARGET/.github/workflows" "$TARGET/tasks" "$TARGET/docs" "$TARGET/scripts"
 
-# Copy only automerge.yml by default (canonical CI).
-# Other workflows (deploy.yml для Supabase) — по запросу через WORKFLOWS env var.
-WORKFLOWS="${WORKFLOWS:-automerge.yml}"
+# Workflows не копируются по умолчанию: автомерж удалён 2026-09-25, мерж — только
+# вручную кнопкой владелицы (docs/rules/core/github-anti-abuse.md).
+# Нужные (deploy.yml для Supabase) — через WORKFLOWS env var.
+WORKFLOWS="${WORKFLOWS:-}"
 for wf in $WORKFLOWS; do
   if [ -f "$TEMPLATE_DIR/workflows/$wf" ]; then
     cp "$TEMPLATE_DIR/workflows/$wf" "$TARGET/.github/workflows/$wf"
@@ -103,5 +104,5 @@ fi
 echo ""
 echo "Done. Next steps:"
 echo "  1. Fill in NEW_PROJECT.md placeholders"
-echo "  2. Optional: install additional workflows via WORKFLOWS='automerge.yml deploy.yml' bash init.sh ..."
+echo "  2. Optional: install additional workflows via WORKFLOWS='deploy.yml' bash init.sh ..."
 echo "  3. Add GitHub Secrets if using Supabase: SBP_ACCESS_TOKEN, SUPABASE_PROJECT_REF"

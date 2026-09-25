@@ -32,7 +32,7 @@ bash <(curl -s https://raw.githubusercontent.com/Arsid0305/TEMPLATE/main/init.sh
 ## Структура после init.sh
 
 ```
-.github/workflows/     — automerge + promote CI/CD
+.github/workflows/     — только то, что передано в WORKFLOWS (по умолчанию пусто)
 tasks/
   todo.md             — активные задачи
   lessons.md          — паттерны ошибок

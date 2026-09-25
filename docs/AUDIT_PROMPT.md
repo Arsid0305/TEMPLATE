@@ -12,7 +12,7 @@
 Тип: мета-шаблон для новых проектов (init.sh + адаптеры для ИИ)
 Стек: Bash (init.sh), Python (scripts/), YAML (workflows), Markdown
 Внешние API: нет
-CI/CD: automerge.yml (claude/** и cursor/** → main)
+CI/CD: нет автомержа; workflows/ — опциональные шаблоны (deploy, promote)
 ```
 
 ## Проектные проверки (в дополнение к universal)

@@ -19,7 +19,6 @@
 - Repo: github.com/[OWNER]/[REPO]
 
 Reference workflows (copy from `workflows/` — optional, remove unused):
-- `automerge.yml` — `claude/**` | `cursor/**` → main via GitHub API (squash + deleteRef) [✅ / ❌]
 - `deploy.yml` — Supabase Edge Functions deploy [✅ / ❌]
 
 ---

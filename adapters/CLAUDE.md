@@ -42,8 +42,8 @@ LIMITATIONS:
 
 ## Git Workflow
 
-- Branch: `claude/<description>` — auto-merges to main via CI after tests pass
-- PRs are optional, automerge triggers on push regardless
+- Branch: `claude/<description>` → PR to `main` (not draft), one PR per session
+- No auto-merge: the owner merges manually with the button. Never merge via API
 
 ---
 
