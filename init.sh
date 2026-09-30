@@ -54,15 +54,9 @@ if [ -f "$TEMPLATE_DIR/docs/AUDIT_PROMPT.md" ]; then
   echo "Copied docs/AUDIT_PROMPT.md"
 fi
 
-# docs/rules/ — SSOT правил экосистемы (см. docs/rules/README.md)
-# core/ синкается из AI_OS; scoped/ — специфика этого проекта, создаётся пустой
-if [ -d "$TEMPLATE_DIR/docs/rules/core" ]; then
-  mkdir -p "$TARGET/docs/rules/scoped"
-  rm -rf "$TARGET/docs/rules/core"
-  cp -r "$TEMPLATE_DIR/docs/rules/core" "$TARGET/docs/rules/core"
-  cp "$TEMPLATE_DIR/docs/rules/README.md" "$TARGET/docs/rules/README.md"
-  echo "Copied docs/rules/ (core + README from AI_OS SSOT)"
-fi
+# docs/rules/core/ живёт только в AI_OS — в проект не копируется, CLAUDE.md ссылается на AI_OS.
+# scoped/ — специфика этого проекта, создаётся пустой.
+mkdir -p "$TARGET/docs/rules/scoped"
 
 if [ -f "$TEMPLATE_DIR/scripts/check_consistency.py" ]; then
   cp "$TEMPLATE_DIR/scripts/check_consistency.py" "$TARGET/scripts/check_consistency.py"

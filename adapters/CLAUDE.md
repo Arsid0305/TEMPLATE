@@ -49,17 +49,20 @@ LIMITATIONS:
 
 ## Ecosystem Rules
 
-Universal rules are in `docs/rules/core/*.md` (synced from AI_OS SSOT via `init.sh`). Read on demand:
+Universal rules live **only in AI_OS** (`AI_OS/docs/rules/core/*.md`) — no copies in this repo. Read on demand:
 
-- Task classification (SMALL / BIG) — [`docs/rules/core/task-classification.md`](docs/rules/core/task-classification.md)
-- Communication style — [`docs/rules/core/communication-style.md`](docs/rules/core/communication-style.md)
-- Code principles (DRY, verification, no over-engineering) — [`docs/rules/core/code-principles.md`](docs/rules/core/code-principles.md)
-- Git flow (branches, PR, forbidden flags) — [`docs/rules/core/git-flow.md`](docs/rules/core/git-flow.md)
-- GitHub anti-abuse (rate limits) — [`docs/rules/core/github-anti-abuse.md`](docs/rules/core/github-anti-abuse.md)
-- Session lifecycle (start/end, todo/lessons format) — [`docs/rules/core/session-lifecycle.md`](docs/rules/core/session-lifecycle.md)
-- Subagents (worktree isolation, JSON-schema contracts) — [`docs/rules/core/subagents.md`](docs/rules/core/subagents.md)
-- Audit trigger — [`docs/rules/core/audit-trigger.md`](docs/rules/core/audit-trigger.md)
+- Task classification (SMALL / BIG) — [`AI_OS/docs/rules/core/task-classification.md`](https://github.com/Arsid0305/AI_OS/blob/main/docs/rules/core/task-classification.md)
+- Communication style — [`AI_OS/docs/rules/core/communication-style.md`](https://github.com/Arsid0305/AI_OS/blob/main/docs/rules/core/communication-style.md)
+- Code principles (DRY, verification, no over-engineering) — [`AI_OS/docs/rules/core/code-principles.md`](https://github.com/Arsid0305/AI_OS/blob/main/docs/rules/core/code-principles.md)
+- Git flow (branches, PR, forbidden flags) — [`AI_OS/docs/rules/core/git-flow.md`](https://github.com/Arsid0305/AI_OS/blob/main/docs/rules/core/git-flow.md)
+- GitHub anti-abuse (rate limits) — [`AI_OS/docs/rules/core/github-anti-abuse.md`](https://github.com/Arsid0305/AI_OS/blob/main/docs/rules/core/github-anti-abuse.md)
+- Session lifecycle (start/end, todo/lessons format) — [`AI_OS/docs/rules/core/session-lifecycle.md`](https://github.com/Arsid0305/AI_OS/blob/main/docs/rules/core/session-lifecycle.md)
+- Subagents (worktree isolation, JSON-schema contracts) — [`AI_OS/docs/rules/core/subagents.md`](https://github.com/Arsid0305/AI_OS/blob/main/docs/rules/core/subagents.md)
+- Audit trigger — [`AI_OS/docs/rules/core/audit-trigger.md`](https://github.com/Arsid0305/AI_OS/blob/main/docs/rules/core/audit-trigger.md)
+- Web session permissions — [`AI_OS/docs/rules/core/web-permissions.md`](https://github.com/Arsid0305/AI_OS/blob/main/docs/rules/core/web-permissions.md)
 
-Architecture and sync rules — [`docs/rules/README.md`](docs/rules/README.md).
+If AI_OS is not attached to the session — ask to attach it; do not reconstruct rules from memory.
+
+Architecture — [`AI_OS/docs/rules/README.md`](https://github.com/Arsid0305/AI_OS/blob/main/docs/rules/README.md).
 
 Project-specific rules live in `docs/rules/scoped/*.md` (edited locally, not synced).
