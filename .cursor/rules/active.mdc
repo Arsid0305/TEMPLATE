@@ -16,7 +16,7 @@ alwaysApply: true
 
 ## Git / PR
 
-- PR в `main` — **не draft** (иначе `automerge.yml` пропустит).
+- PR в `main` — **не draft**. Автомержа нет: мержит владелица кнопкой, мерж через API запрещён.
 - Никогда `--no-verify` / `--force` / `--no-gpg-sign`.
 - Разработка только на `claude/...` ветке.
 

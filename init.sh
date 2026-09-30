@@ -33,7 +33,7 @@ fi
 mkdir -p "$TARGET/.github/workflows" "$TARGET/tasks" "$TARGET/docs" "$TARGET/scripts"
 
 # Workflows не копируются по умолчанию: автомерж удалён 2026-09-25, мерж — только
-# вручную кнопкой владелицы (docs/rules/core/github-anti-abuse.md).
+# вручную кнопкой владелицы (AI_OS/docs/rules/core/github-anti-abuse.md).
 # Нужные (deploy.yml для Supabase) — через WORKFLOWS env var.
 WORKFLOWS="${WORKFLOWS:-}"
 for wf in $WORKFLOWS; do

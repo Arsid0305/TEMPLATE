@@ -78,6 +78,6 @@ TEMPLATE/
 
 ## Синхронизация с AI_OS
 
-Из [arsid0305/ai_os](https://github.com/arsid0305/ai_os) через `sync-to-template.yml` при пуше в `main` AI_OS автоматически перезаписываются: `.claude/`, `.cursor/`, `ADAPTERS/`, `docs/rules/core/`, `docs/rules/README.md`. ⚠️ Синк выключен вручную с 2026-09-06 — пока правила переносятся руками.
+Правила экосистемы живут только в [arsid0305/ai_os](https://github.com/arsid0305/ai_os/tree/main/docs/rules/core) — в TEMPLATE и новых проектах копий нет, `CLAUDE.md` ссылается на AI_OS. Автосинка нет (`sync-to-template.yml` снят 2026-09-30); `.claude/`, `ADAPTERS/` переносятся из AI_OS вручную.
 
 **Не** синхронизируются (тонкие TEMPLATE-специфичные): `SYSTEM.md`, `CLAUDE.md`, `NEW_PROJECT.md`, `SECURITY.md`, `init.sh`, `adapters/`, `workflows/`, `docs/`, `scripts/`.
