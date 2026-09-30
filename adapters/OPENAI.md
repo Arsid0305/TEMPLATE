@@ -31,6 +31,5 @@ LIMITATIONS:
 
 ## Notes
 
-- Context window varies by model (gpt-4o: 128k, o1: 200k)
 - Tool availability depends on environment (API vs ChatGPT vs Codex)
 - Adapt workflow to available capabilities declared above

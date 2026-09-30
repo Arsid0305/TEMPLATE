@@ -3,7 +3,7 @@
 #
 # Local usage:  bash init.sh /path/to/new-project [adapter]
 # Remote usage: bash <(curl -s https://raw.githubusercontent.com/Arsid0305/TEMPLATE/main/init.sh) . [adapter]
-# Adapters: claude (default) | openai | cursor
+# Adapters: claude (default) | openai
 
 set -euo pipefail
 
@@ -84,7 +84,6 @@ ADAPTER_UPPER="$(echo "$ADAPTER" | tr '[:lower:]' '[:upper:]')"
 ADAPTER_SRC="$TEMPLATE_DIR/adapters/${ADAPTER_UPPER}.md"
 case "$ADAPTER" in
   claude) DEST="$TARGET/CLAUDE.md" ;;
-  cursor) mkdir -p "$TARGET/.cursor/rules"; DEST="$TARGET/.cursor/rules/project.mdc" ;;
   openai) DEST="$TARGET/AGENTS.md" ;;
   *)      DEST="$TARGET/CLAUDE.md" ;;
 esac

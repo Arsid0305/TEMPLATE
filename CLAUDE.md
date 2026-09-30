@@ -31,7 +31,7 @@
 - Выбор модели `haiku`/`sonnet`/`opus` — `llm_wiki/wiki/workflow.md`
 - Context Mode — `llm_wiki/wiki/context-mode.md`
 
-Архитектура rules и правила синка — [`docs/rules/README.md`](docs/rules/README.md).
+Архитектура rules — `AI_OS/docs/rules/README.md`.
 
 ---
 
@@ -77,5 +77,3 @@ WORKFLOWS='deploy.yml' bash init.sh /path/to/new-project claude
 1. Разработка на ветке `claude/...` → PR в `main` (не draft)
 2. Один PR на сессию. **Автомержа нет** (удалён 2026-09-25) — мержит владелица кнопкой.
 3. Мерж через API запрещён — `AI_OS/docs/rules/core/github-anti-abuse.md`.
-
-Никогда не мержить в `main` вручную без явного подтверждения.

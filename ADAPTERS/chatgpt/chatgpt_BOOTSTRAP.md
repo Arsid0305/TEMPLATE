@@ -11,7 +11,7 @@
 2. Вставить содержимое `SYSTEM.md` в поле Instructions
 3. Дополнительно вставить `ADAPTERS/chatgpt/active-rules.md` — оперативные правила поведения (канон в `AI_OS/MEMORY/rules/active.md`)
 
-**Обновление правил:** при изменении `active.md` запустить `bash scripts/sync-active-rules.sh` → скопировать обновлённый `active-rules.md` в Project Instructions заново.
+**Обновление правил:** при изменении `AI_OS/MEMORY/rules/active.md` перенести правки в `active-rules.md` вручную и заново вставить его в Project Instructions.
 
 **Или в начале каждого чата:**
 

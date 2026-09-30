@@ -35,7 +35,7 @@ def main() -> None:
         fail("docs/rules/core/ exists — rules live only in AI_OS, link instead of copying")
 
     # 3. Adapter files exist
-    for adapter in ["adapters/CLAUDE.md", "adapters/CURSOR.md", "adapters/OPENAI.md"]:
+    for adapter in ["adapters/CLAUDE.md", "adapters/OPENAI.md"]:
         if not (root / adapter).exists():
             fail(f"Missing adapter file: {adapter}")
 

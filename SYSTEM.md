@@ -31,27 +31,24 @@ TEMPLATE/
 ├── init.sh                ← скрипт инициализации нового проекта
 ├── docs/rules/            ← указатель: правила экосистемы живут в AI_OS
 │   └── README.md
-├── adapters/              ← адаптеры для init.sh (CLAUDE.md, CURSOR.md, OPENAI.md)
-├── ADAPTERS/              ← веб-адаптеры (ChatGPT, Gemini, Codex, Claude Web)
-│   └── [синхронизируется из AI_OS автоматически]
+├── adapters/              ← адаптеры для init.sh (CLAUDE.md, OPENAI.md)
+├── ADAPTERS/              ← веб-адаптеры (ChatGPT, Claude Web), поддерживаются вручную
 ├── workflows/             ← шаблоны CI/CD для новых проектов
 │   └── deploy.yml         ← Supabase Edge Functions deploy
-├── .claude/               ← агенты + хуки Claude Code (синхронизируется из AI_OS)
-├── .cursor/               ← правила Cursor (синхронизируется из AI_OS)
+├── .claude/               ← агенты + хуки Claude Code (переносятся из AI_OS вручную)
 ├── docs/
 │   ├── AUDIT_PROMPT.md    ← reference-промпт для аудитов репо
-│   ├── ARCHITECTURE.md    ← архитектурный скелет с AUTO-маркерами
 │   └── rules/             ← (см. выше — вынесено отдельным блоком)
 └── scripts/
-    └── gen_docs.py        ← генерация документации
+    └── check_consistency.py ← проверка согласованности (запуск локально)
 ```
 
 ### Два типа адаптеров
 
 | Директория | Назначение | Источник |
 |---|---|---|
-| `adapters/` | Копируется в новый проект как `CLAUDE.md` / `.cursor/rules` через `init.sh` | Поддерживается вручную |
-| `ADAPTERS/` | Веб-адаптеры для вставки в чат (ChatGPT, Gemini, Claude Web, Codex) | Синхронизируется из AI_OS |
+| `adapters/` | Копируется в новый проект как `CLAUDE.md` / `AGENTS.md` через `init.sh` | Поддерживается вручную |
+| `ADAPTERS/` | Веб-адаптеры для вставки в чат (ChatGPT, Claude Web) | Поддерживается вручную |
 
 ---
 
@@ -77,20 +74,16 @@ TEMPLATE/
 ## 4. TEMPLATE-специфика — CI/CD
 
 ### Мерж — только вручную
-- Автомержа нет (удалён 2026-09-25). PR из `claude/...` и `cursor/...` мержит владелица кнопкой.
+- Автомержа нет (удалён 2026-09-25). PR из `claude/...` мержит владелица кнопкой.
 - Канон — `AI_OS/docs/rules/core/github-anti-abuse.md`, `AI_OS/docs/rules/core/git-flow.md`.
 
 ---
 
 ## 5. Синхронизация с AI_OS
 
-Автосинка нет (`sync-to-template.yml` снят 2026-09-30). Правила не переносятся — на них ссылаются. Из AI_OS вручную переносятся только:
+Автосинка нет (`sync-to-template.yml` снят 2026-09-30). Правила не переносятся — на них ссылаются. Из AI_OS вручную переносятся только `.claude/` — агенты и хуки Claude Code.
 
-- `.claude/` — агенты и хуки Claude Code
-- `.cursor/` — правила Cursor
-- `ADAPTERS/` — веб-адаптеры (ChatGPT, Gemini, Codex, Claude Web)
-
-**Не синхронизируется** (тонкие TEMPLATE-специфичные адаптеры / не пригодные для шаблона): `CLAUDE.md`, `SYSTEM.md`, `NEW_PROJECT.md`, `SECURITY.md`, `init.sh`, `adapters/`, `workflows/`, `docs/AUDIT_PROMPT.md`, `docs/ARCHITECTURE.md`, `skills_sistem/`, `scripts/gen_docs.py`, `docs/rules/scoped/`.
+**Не переносится** (TEMPLATE-специфичное): `CLAUDE.md`, `SYSTEM.md`, `NEW_PROJECT.md`, `SECURITY.md`, `init.sh`, `adapters/`, `ADAPTERS/`, `workflows/`, `docs/AUDIT_PROMPT.md`, `scripts/`.
 
 ---
 

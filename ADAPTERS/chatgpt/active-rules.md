@@ -1,6 +1,6 @@
 # Active Rules for chatgpt
 
-> Auto-generated from `AI_OS/MEMORY/rules/active.md`.
+> Копия `AI_OS/MEMORY/rules/active.md`, обновляется вручную.
 > **Manual step:** скопировать содержимое этого файла в Project Instructions / Custom Instructions в UI chatgpt.
 
 ## Поведение ИИ
