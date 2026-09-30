@@ -7,7 +7,9 @@ if [ "${CLAUDE_CODE_REMOTE:-}" != "true" ]; then
 fi
 
 # Install Python dependencies
-pip install -r "$CLAUDE_PROJECT_DIR/requirements.txt" --quiet
+if [ -f "$CLAUDE_PROJECT_DIR/requirements.txt" ]; then
+  pip install -r "$CLAUDE_PROJECT_DIR/requirements.txt" --quiet
+fi
 
 # Install context-mode if missing
 if ! command -v context-mode &> /dev/null; then

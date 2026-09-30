@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Consistency checker for TEMPLATE repo — runs as CI gate in automerge.yml."""
+"""Consistency checker for TEMPLATE repo — run locally: python3 scripts/check_consistency.py."""
 
 import argparse
 import sys
@@ -30,26 +30,12 @@ def main() -> None:
     except OSError as exc:
         fail(f"Cannot read QUICKSTART.md: {exc}")
 
-    # 2. Both automerge.yml (self CI + template shipped to new projects) filter claude/cursor branches
-    for wf_path in [
-        root / ".github" / "workflows" / "automerge.yml",
-        root / "workflows" / "automerge.yml",
-    ]:
-        try:
-            wf = wf_path.read_text()
-            if "branches-ignore" in wf:
-                fail(f"{wf_path.relative_to(root)}: uses 'branches-ignore' — should filter head via startsWith")
-            if "'claude/'" not in wf:
-                fail(f"{wf_path.relative_to(root)}: missing claude/ head filter")
-            if "'cursor/'" not in wf:
-                fail(f"{wf_path.relative_to(root)}: missing cursor/ head filter")
-            if "pull_request_target" not in wf:
-                fail(f"{wf_path.relative_to(root)}: не использует pull_request_target — API-PR не триггерят workflow")
-        except OSError as exc:
-            fail(f"Cannot read {wf_path.relative_to(root)}: {exc}")
+    # 2. Rules live only in AI_OS — no local copy of docs/rules/core/
+    if (root / "docs" / "rules" / "core").exists():
+        fail("docs/rules/core/ exists — rules live only in AI_OS, link instead of copying")
 
     # 3. Adapter files exist
-    for adapter in ["adapters/CLAUDE.md", "adapters/CURSOR.md", "adapters/OPENAI.md"]:
+    for adapter in ["adapters/CLAUDE.md", "adapters/OPENAI.md"]:
         if not (root / adapter).exists():
             fail(f"Missing adapter file: {adapter}")
 

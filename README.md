@@ -1,6 +1,6 @@
 # TEMPLATE
 
-Bootstrap-шаблон для новых проектов с Claude Code, Cursor и GitHub Actions CI/CD.
+Bootstrap-шаблон для новых проектов с Claude Code и GitHub Actions CI/CD.
 
 ---
 
@@ -17,8 +17,7 @@ bash /tmp/arsid-template/init.sh /path/to/new-project claude
 | Аргумент | Значение |
 |---|---|
 | `claude` (default) | Копирует `adapters/CLAUDE.md` → `CLAUDE.md` |
-| `cursor` | Копирует `adapters/CURSOR.md` → `.cursor/rules/project.mdc` |
-| `openai` | Копирует `adapters/OPENAI.md` → инструкции для Codex/GPT |
+| `openai` | Копирует `adapters/OPENAI.md` → `AGENTS.md` (ChatGPT / OpenAI) |
 
 ---
 
@@ -44,13 +43,12 @@ CLAUDE.md              ← из adapters/ (зависит от аргумент�
 
 ```
 TEMPLATE/
-├── adapters/          ← адаптеры для init.sh (CLAUDE.md, CURSOR.md, OPENAI.md)
-├── ADAPTERS/          ← веб-адаптеры (ChatGPT, Gemini, Claude Web, Codex) — синкается из AI_OS
+├── adapters/          ← адаптеры для init.sh (CLAUDE.md, OPENAI.md)
+├── ADAPTERS/          ← веб-адаптеры (ChatGPT, Claude Web), поддерживаются вручную
 ├── workflows/         ← шаблоны CI/CD (копируются в новые проекты)
 ├── docs/              ← AUDIT_PROMPT.md
 ├── scripts/           ← check_consistency.py
-├── .claude/           ← агенты и хуки Claude Code (синкается из AI_OS)
-├── .cursor/           ← правила Cursor (синкается из AI_OS)
+├── .claude/           ← агенты и хуки Claude Code (переносятся из AI_OS вручную)
 ├── init.sh            ← скрипт инициализации
 ├── SYSTEM.md          ← контекст TEMPLATE-репо для AI
 ├── CLAUDE.md          ← адаптер Claude Code для работы в TEMPLATE (тонкий, не синкается)
@@ -61,8 +59,8 @@ TEMPLATE/
 
 | Директория | Что содержит | Для чего |
 |---|---|---|
-| `adapters/` | CLAUDE.md, CURSOR.md, OPENAI.md | Адаптеры AI-инструментов для **новых проектов** (используются `init.sh`) |
-| `ADAPTERS/` | chatgpt/, claude-web/, codex/, gemini/ | Адаптеры для **веб-интерфейсов** (вставить в чат ChatGPT, Gemini и т.д.) |
+| `adapters/` | CLAUDE.md, OPENAI.md | Адаптеры AI-инструментов для **новых проектов** (используются `init.sh`) |
+| `ADAPTERS/` | chatgpt/, claude-web/ | Адаптеры для **веб-интерфейсов** (вставить в чат ChatGPT, Claude) |
 
 ---
 
@@ -78,6 +76,6 @@ TEMPLATE/
 
 ## Синхронизация с AI_OS
 
-Из [arsid0305/ai_os](https://github.com/arsid0305/ai_os) через `sync-to-template.yml` при пуше в `main` AI_OS автоматически перезаписываются: `.claude/`, `.cursor/`, `ADAPTERS/`, `docs/rules/core/`, `docs/rules/README.md`. ⚠️ Синк выключен вручную с 2026-09-06 — пока правила переносятся руками.
+Правила экосистемы живут только в [arsid0305/ai_os](https://github.com/arsid0305/ai_os/tree/main/docs/rules/core) — в TEMPLATE и новых проектах копий нет, `CLAUDE.md` ссылается на AI_OS. Автосинка нет (`sync-to-template.yml` снят 2026-09-30); `.claude/` переносится из AI_OS вручную.
 
 **Не** синхронизируются (тонкие TEMPLATE-специфичные): `SYSTEM.md`, `CLAUDE.md`, `NEW_PROJECT.md`, `SECURITY.md`, `init.sh`, `adapters/`, `workflows/`, `docs/`, `scripts/`.

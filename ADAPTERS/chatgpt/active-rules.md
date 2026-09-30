@@ -1,6 +1,6 @@
 # Active Rules for chatgpt
 
-> Auto-generated from `AI_OS/MEMORY/rules/active.md`.
+> Копия `AI_OS/MEMORY/rules/active.md`, обновляется вручную.
 > **Manual step:** скопировать содержимое этого файла в Project Instructions / Custom Instructions в UI chatgpt.
 
 ## Поведение ИИ
@@ -12,7 +12,7 @@
 
 ## Git / PR
 
-- PR в `main` — **не draft** (иначе `automerge.yml` пропустит).
+- PR в `main` — **не draft**. Автомержа нет: мержит владелица кнопкой, мерж через API запрещён.
 - Никогда `--no-verify` / `--force` / `--no-gpg-sign`.
 - Разработка только на `claude/...` ветке.
 

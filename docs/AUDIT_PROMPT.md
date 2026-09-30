@@ -20,8 +20,7 @@ CI/CD: нет автомержа; workflows/ — опциональные шаб
 - [ ] `init.sh` не ломается на путях с пробелами / кириллицей
 - [ ] Плейсхолдеры в `NEW_PROJECT.md` реально заменяются `init.sh` — не остаются `{{PROJECT_NAME}}` в новых проектах
 - [ ] `adapters/` (для init.sh) не смешан с `ADAPTERS/` (веб-адаптеры) — разные назначения
-- [ ] Синк из AI_OS (`sync-to-template.yml` в AI_OS) НЕ копирует `CLAUDE.md`, `SYSTEM.md`, `ARCHITECTURE.md`, `skills_sistem/`, `gen_docs.py` — они AI_OS-specific
-- [ ] `SYSTEM.md §7` описание синка совпадает с реальным списком в `sync-to-template.yml`
+- [ ] Нет папки `docs/rules/core/`; `init.sh` её не копирует; ссылки на правила ведут в `AI_OS/docs/rules/core/`
 
 ## Формат отчёта
 

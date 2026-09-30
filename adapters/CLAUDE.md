@@ -34,11 +34,7 @@ LIMITATIONS:
 
 ## Subagents
 
-| Model | When |
-|-------|------|
-| `haiku` | File search, grep, simple reads — fast and cheap |
-| `sonnet` | Code writing, debugging — default |
-| `opus` | Architecture, complex BIG-task analysis |
+Model choice (`haiku` / `sonnet` / `opus`) — `llm_wiki/wiki/workflow.md`.
 
 ## Git Workflow
 
