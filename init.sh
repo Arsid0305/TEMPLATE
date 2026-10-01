@@ -47,7 +47,6 @@ done
 
 touch "$TARGET/tasks/todo.md" "$TARGET/tasks/lessons.md"
 
-cp "$TEMPLATE_DIR/NEW_PROJECT.md" "$TARGET/NEW_PROJECT.md"
 
 if [ -f "$TEMPLATE_DIR/docs/AUDIT_PROMPT.md" ]; then
   cp "$TEMPLATE_DIR/docs/AUDIT_PROMPT.md" "$TARGET/docs/AUDIT_PROMPT.md"
@@ -57,6 +56,8 @@ fi
 # docs/rules/core/ живёт только в AI_OS — в проект не копируется, CLAUDE.md ссылается на AI_OS.
 # scoped/ — специфика этого проекта, создаётся пустой.
 mkdir -p "$TARGET/docs/rules/scoped"
+# Факты о проекте — одним файлом в scoped/ (не NEW_PROJECT.md в корне: он дублировался с CLAUDE.md).
+cp "$TEMPLATE_DIR/scoped-template/project.md" "$TARGET/docs/rules/scoped/project.md"
 
 if [ -f "$TEMPLATE_DIR/scripts/check_consistency.py" ]; then
   cp "$TEMPLATE_DIR/scripts/check_consistency.py" "$TARGET/scripts/check_consistency.py"
@@ -96,6 +97,6 @@ fi
 
 echo ""
 echo "Done. Next steps:"
-echo "  1. Fill in NEW_PROJECT.md placeholders"
+echo "  1. Fill in docs/rules/scoped/project.md placeholders"
 echo "  2. Optional: install additional workflows via WORKFLOWS='deploy.yml' bash init.sh ..."
 echo "  3. Add GitHub Secrets if using Supabase: SBP_ACCESS_TOKEN, SUPABASE_PROJECT_REF"

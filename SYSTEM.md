@@ -26,7 +26,7 @@ TEMPLATE/
 ├── SYSTEM.md              ← ты здесь (тонкий адаптер)
 ├── CLAUDE.md              ← адаптер для Claude Code (TEMPLATE-специфичный)
 ├── SECURITY.md            ← чеклист безопасности перед деплоем
-├── NEW_PROJECT.md         ← шаблон контекста нового проекта (плейсхолдеры)
+├── scoped-template/project.md ← шаблон фактов о проекте → docs/rules/scoped/project.md
 ├── QUICKSTART.md          ← быстрый старт
 ├── init.sh                ← скрипт инициализации нового проекта
 ├── docs/rules/            ← указатель: правила экосистемы живут в AI_OS
@@ -83,7 +83,7 @@ TEMPLATE/
 
 Автосинка нет (`sync-to-template.yml` снят 2026-09-30). Правила не переносятся — на них ссылаются. Из AI_OS вручную переносятся только `.claude/` — агенты и хуки Claude Code.
 
-**Не переносится** (TEMPLATE-специфичное): `CLAUDE.md`, `SYSTEM.md`, `NEW_PROJECT.md`, `SECURITY.md`, `init.sh`, `adapters/`, `ADAPTERS/`, `workflows/`, `docs/AUDIT_PROMPT.md`, `scripts/`.
+**Не переносится** (TEMPLATE-специфичное): `CLAUDE.md`, `SYSTEM.md`, `scoped-template/`, `SECURITY.md`, `init.sh`, `adapters/`, `ADAPTERS/`, `workflows/`, `docs/AUDIT_PROMPT.md`, `scripts/`.
 
 ---
 
