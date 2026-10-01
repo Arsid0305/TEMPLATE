@@ -1,7 +1,8 @@
-# Project Context
+# Project Context — [PROJECT]
 
-> Fill in placeholders when starting a new project.
-> Keep this file updated throughout the project lifecycle.
+> Единственное место фактов о проекте: стек, инфраструктура, среда, структура, auth.
+> `CLAUDE.md` и `docs/AUDIT_PROMPT.md` на этот файл ссылаются и не повторяют его.
+> Заполнить плейсхолдеры при старте; держать актуальным, у утверждений про автоматику — дата проверки.
 
 ---
 
@@ -82,8 +83,3 @@ tasks/
 - Step 2: `supabase.auth.verifyOtp({ email, token, type: 'email' })` — verifies
 - Code is **8 digits** (not 6)
 
----
-
-## 8. Open Bugs
-
-_(empty)_

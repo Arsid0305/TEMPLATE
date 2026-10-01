@@ -61,4 +61,4 @@ If AI_OS is not attached to the session — ask to attach it; do not reconstruct
 
 Architecture — [`AI_OS/docs/rules/README.md`](https://github.com/Arsid0305/AI_OS/blob/main/docs/rules/README.md).
 
-Project-specific rules live in `docs/rules/scoped/*.md` (edited locally, not synced).
+Project-specific rules and facts live in `docs/rules/scoped/*.md` (edited locally, not synced). Stack / infrastructure / deploy — only in `docs/rules/scoped/project.md`; do not repeat them in this file.

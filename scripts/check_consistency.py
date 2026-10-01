@@ -39,10 +39,10 @@ def main() -> None:
         if not (root / adapter).exists():
             fail(f"Missing adapter file: {adapter}")
 
-    # 4. No adapter, SYSTEM.md, NEW_PROJECT.md, workflows/*.yml mention 'dev' branch in git workflow
+    # 4. No adapter, SYSTEM.md, scoped-template/project.md, workflows/*.yml mention 'dev' branch in git workflow
     adapters_dir = root / "adapters"
     system_md = root / "SYSTEM.md"
-    new_project_md = root / "NEW_PROJECT.md"
+    new_project_md = root / "scoped-template" / "project.md"
     workflows_dir = root / "workflows"
     candidates = list(adapters_dir.glob("*.md")) if adapters_dir.exists() else []
     if system_md.exists():

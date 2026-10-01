@@ -41,7 +41,7 @@
 git clone https://github.com/Arsid0305/TEMPLATE /tmp/arsid-template
 bash /tmp/arsid-template/init.sh /path/to/new-project claude
 ```
-Заполнить плейсхолдеры в `NEW_PROJECT.md`.
+Заполнить плейсхолдеры в `docs/rules/scoped/project.md`.
 
 Опционально скопировать доп. workflows:
 ```bash

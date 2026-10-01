@@ -11,7 +11,7 @@ git clone https://github.com/Arsid0305/TEMPLATE /tmp/arsid-template
 bash /tmp/arsid-template/init.sh /path/to/new-project claude
 ```
 
-Затем заполнить плейсхолдеры в `NEW_PROJECT.md`.
+Затем заполнить плейсхолдеры в `docs/rules/scoped/project.md`.
 
 **Аргументы `init.sh`:**
 | Аргумент | Значение |
@@ -30,9 +30,9 @@ tasks/
   lessons.md
 docs/
   AUDIT_PROMPT.md
+  rules/scoped/project.md  ← заполнить плейсхолдеры
 scripts/
   check_consistency.py
-NEW_PROJECT.md         ← заполнить плейсхолдеры
 .gitignore
 CLAUDE.md              ← из adapters/ (зависит от аргумента)
 ```
@@ -78,4 +78,4 @@ TEMPLATE/
 
 Правила экосистемы живут только в [arsid0305/ai_os](https://github.com/arsid0305/ai_os/tree/main/docs/rules/core) — в TEMPLATE и новых проектах копий нет, `CLAUDE.md` ссылается на AI_OS. Автосинка нет (`sync-to-template.yml` снят 2026-09-30); `.claude/` переносится из AI_OS вручную.
 
-**Не** синхронизируются (тонкие TEMPLATE-специфичные): `SYSTEM.md`, `CLAUDE.md`, `NEW_PROJECT.md`, `SECURITY.md`, `init.sh`, `adapters/`, `workflows/`, `docs/`, `scripts/`.
+**Не** синхронизируются (тонкие TEMPLATE-специфичные): `SYSTEM.md`, `CLAUDE.md`, `scoped-template/`, `SECURITY.md`, `init.sh`, `adapters/`, `workflows/`, `docs/`, `scripts/`.
