@@ -3,7 +3,7 @@
 #
 # Local usage:  bash init.sh /path/to/new-project [adapter]
 # Remote usage: bash <(curl -s https://raw.githubusercontent.com/Arsid0305/TEMPLATE/main/init.sh) . [adapter]
-# Adapters: claude (default) | openai
+# Adapters: claude (default, AGENTS.md + CLAUDE.md) | openai (AGENTS.md only)
 
 set -euo pipefail
 
@@ -53,7 +53,7 @@ if [ -f "$TEMPLATE_DIR/docs/AUDIT_PROMPT.md" ]; then
   echo "Copied docs/AUDIT_PROMPT.md"
 fi
 
-# docs/rules/core/ живёт только в AI_OS — в проект не копируется, CLAUDE.md ссылается на AI_OS.
+# docs/rules/core/ живёт только в AI_OS — в проект не копируется, AGENTS.md ссылается на AI_OS.
 # scoped/ — специфика этого проекта, создаётся пустой.
 mkdir -p "$TARGET/docs/rules/scoped"
 # Факты о проекте — одним файлом в scoped/ (не NEW_PROJECT.md в корне: он дублировался с CLAUDE.md).
@@ -81,19 +81,22 @@ GITIGNORE
   echo "Created .gitignore"
 fi
 
-ADAPTER_UPPER="$(echo "$ADAPTER" | tr '[:lower:]' '[:upper:]')"
-ADAPTER_SRC="$TEMPLATE_DIR/adapters/${ADAPTER_UPPER}.md"
+# AGENTS.md — общий вход для любого ИИ (Codex читает сам), создаётся всегда.
+cp "$TEMPLATE_DIR/adapters/AGENTS.md" "$TARGET/AGENTS.md"
+echo "Copied adapter: AGENTS.md"
+
+# claude — дополнительно CLAUDE.md (строка @AGENTS.md + Claude-специфика).
+# openai — только AGENTS.md (его читает Codex).
 case "$ADAPTER" in
-  claude) DEST="$TARGET/CLAUDE.md" ;;
-  openai) DEST="$TARGET/AGENTS.md" ;;
-  *)      DEST="$TARGET/CLAUDE.md" ;;
+  claude)
+    cp "$TEMPLATE_DIR/adapters/CLAUDE.md" "$TARGET/CLAUDE.md"
+    echo "Copied adapter: CLAUDE.md"
+    ;;
+  openai) ;;
+  *)
+    echo "WARNING: Unknown adapter: $ADAPTER (only AGENTS.md created)" >&2
+    ;;
 esac
-if [ -f "$ADAPTER_SRC" ]; then
-  cp "$ADAPTER_SRC" "$DEST"
-  echo "Copied adapter: $ADAPTER → $(basename "$DEST")"
-else
-  echo "WARNING: Adapter not found: $ADAPTER (skipped)" >&2
-fi
 
 echo ""
 echo "Done. Next steps:"

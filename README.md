@@ -16,8 +16,8 @@ bash /tmp/arsid-template/init.sh /path/to/new-project claude
 **Аргументы `init.sh`:**
 | Аргумент | Значение |
 |---|---|
-| `claude` (default) | Копирует `adapters/CLAUDE.md` → `CLAUDE.md` |
-| `openai` | Копирует `adapters/OPENAI.md` → `AGENTS.md` (ChatGPT / OpenAI) |
+| `claude` (default) | `adapters/AGENTS.md` → `AGENTS.md` и `adapters/CLAUDE.md` → `CLAUDE.md` (подключает `AGENTS.md` строкой `@AGENTS.md`) |
+| `openai` | Только `adapters/AGENTS.md` → `AGENTS.md` (его читает OpenAI Codex) |
 
 ---
 
@@ -34,7 +34,8 @@ docs/
 scripts/
   check_consistency.py
 .gitignore
-CLAUDE.md              ← из adapters/ (зависит от аргумента)
+AGENTS.md              ← из adapters/, всегда (вход для любого ИИ)
+CLAUDE.md              ← из adapters/, только для `claude`
 ```
 
 ---
@@ -43,7 +44,7 @@ CLAUDE.md              ← из adapters/ (зависит от аргумент�
 
 ```
 TEMPLATE/
-├── adapters/          ← адаптеры для init.sh (CLAUDE.md, OPENAI.md)
+├── adapters/          ← адаптеры для init.sh (AGENTS.md, CLAUDE.md, OPENAI.md)
 ├── ADAPTERS/          ← веб-адаптеры (ChatGPT, Claude Web), поддерживаются вручную
 ├── workflows/         ← шаблоны CI/CD (копируются в новые проекты)
 ├── docs/              ← AUDIT_PROMPT.md
@@ -51,7 +52,8 @@ TEMPLATE/
 ├── .claude/           ← агенты и хуки Claude Code (переносятся из AI_OS вручную)
 ├── init.sh            ← скрипт инициализации
 ├── SYSTEM.md          ← контекст TEMPLATE-репо для AI
-├── CLAUDE.md          ← адаптер Claude Code для работы в TEMPLATE (тонкий, не синкается)
+├── AGENTS.md          ← вход для любого ИИ при работе в TEMPLATE (Codex читает сам)
+├── CLAUDE.md          ← адаптер Claude Code: `@AGENTS.md` + Claude-специфика
 └── SECURITY.md        ← чеклист безопасности перед деплоем
 ```
 
@@ -59,7 +61,7 @@ TEMPLATE/
 
 | Директория | Что содержит | Для чего |
 |---|---|---|
-| `adapters/` | CLAUDE.md, OPENAI.md | Адаптеры AI-инструментов для **новых проектов** (используются `init.sh`) |
+| `adapters/` | AGENTS.md, CLAUDE.md, OPENAI.md | Адаптеры AI-инструментов для **новых проектов** (используются `init.sh`) |
 | `ADAPTERS/` | chatgpt/, claude-web/ | Адаптеры для **веб-интерфейсов** (вставить в чат ChatGPT, Claude) |
 
 ---
